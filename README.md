@@ -145,3 +145,19 @@ app.use(cors());
 ...
 
 ```
+
+## MySQL과 Sequelize 설정
+
+```bash
+$npm i mysql2 sequelize 
+$npm i nodemon -dev
+$npm i sequelize-cli -g
+```
+
+그 후 다음 sequelize-cli를 이용해 sequelize를 초기화 합니다.
+
+```bash
+$sequelize init
+```
+
+이러면 config, models, migration, seeders라는 폴더가 자동으로 생성됩니다. 
