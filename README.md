@@ -23,7 +23,7 @@
 
  ### Apollo Server 설치
 
-  ```bash
+```bash
  $npm i apollo-server graphql
  ```
 
@@ -100,3 +100,48 @@ $curl -X POST "http;//localhost:4000" -H "content-type: application/json" -d '{"
 - **curl**은 다양한 프로토콜로 데이터를 전송하는 라이브러리, 명령줄 도구입니다.
     - 원격 서버(FTP, HTTP등)에서 파일을 받아 보여주는 도구입니다. 
 - 또한 Graph QL 서버는 Playground라고 하는 웹 기반 툴이 있어서 브라우저에서도 쿼리를 확인할 수 있다는 장점이 있습니다.
+
+ ## 익스프레스 Setting
+
+```bash
+ $npm i apollo-server-express
+ $npm i express
+ ```
+
+그 후 index.js 파일에 다음과 같이 구현합니다. 
+
+```javascript
+import expess = require('express');
+import { ApolloServer } = require('apollo-server-express');
+
+const app = express();
+...
+const server = new ApolloServer({
+    typeDefs,
+    resolvers
+});
+
+server.applyMiddleware({app, path: '/graphql'});
+
+app.listen({port: 8000}, ()=> {
+    console.log('Apollo Server on http://localhost:8000/graphql');
+});
+```
+
+CORS 문제를 해결하기 위해 CORS 라이브러리를 익스프레스에 추가해줍니다.
+
+```bash
+$npm i cors
+```
+
+```javascript
+import cors = require('cors');
+import expess = require('express');
+import { ApolloServer } = require('apollo-server-express');
+
+const app = express();
+app.use(cors());
+
+...
+
+```

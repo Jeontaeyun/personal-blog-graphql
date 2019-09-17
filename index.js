@@ -1,4 +1,10 @@
-const { ApolloServer, gql } = require('apollo-server');
+const express = require('express');
+const { ApolloServer, gql } = require('apollo-server-express');
+const cors = require('cors');
+
+const app = express();
+
+app.use(cors());
 
 const books = [
 	{
@@ -33,6 +39,8 @@ const server = new ApolloServer({
 	resolvers
 });
 
-server.listen().then(({ url }) => {
-	console.log(`Listening at ${url}`);
+server.applyMiddleware({ app, path: '/graphql' });
+
+app.listen({ port: 8000 }, () => {
+	console.log('Apollo Server on http://localhost:8000/graphql');
 });
