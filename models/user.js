@@ -1,8 +1,8 @@
 module.exports = (sequelize, DataTypes) => {
+	// TABLE NAME : users
 	const User = sequelize.define(
 		'User',
 		{
-			// 테이블명은 users라고 변경된다.
 			nickname: {
 				type: DataTypes.STRING(20),
 				allowNull: false
@@ -16,10 +16,6 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING(100),
 				allowNull: false
 			},
-			description: {
-				type: DataTypes.STRING(20),
-				allowNull: true
-			},
 			grant: {
 				type: DataTypes.INTEGER,
 				allowNUll: true
@@ -31,6 +27,8 @@ module.exports = (sequelize, DataTypes) => {
 			tableName: 'users'
 		}
 	);
-	User.associate = (db) => {};
+	User.associate = (db) => {
+		db.User.belongsToMany(db.Post, { though: 'Like', as: 'Liked' });
+	};
 	return User;
 };
