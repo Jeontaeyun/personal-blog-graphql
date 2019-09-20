@@ -5,21 +5,21 @@ module.exports = {
 	development: {
 		username: process.env.DB_NAME,
 		password: process.env.DB_PASSWORD,
-		database: 'reactnodebird',
+		database: 'blogproject',
 		host: 'localhost',
 		dialect: 'mysql'
 	},
 	test: {
 		username: process.env.DB_NAME,
 		password: process.env.DB_PASSWORD,
-		database: 'reactnodebird',
+		database: 'blogproject',
 		host: 'localhost',
 		dialect: 'mysql'
 	},
 	production: {
 		username: process.env.DB_NAME,
 		password: process.env.DB_PASSWORD,
-		database: 'reactnodebird',
+		database: 'blogproject',
 		host: 'localhost',
 		dialect: 'mysql'
 	}

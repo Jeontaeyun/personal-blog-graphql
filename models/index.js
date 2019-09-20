@@ -5,7 +5,7 @@ const path = require('path');
 const Sequelize = require('sequelize');
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
-const config = require(__dirname + '/../config/config.json')[env];
+const config = require(__dirname + '/../config/config.js')[env];
 const db = {};
 
 let sequelize;
@@ -27,6 +27,10 @@ fs
 
 db.Post = require('./post')(sequelize, Sequelize);
 db.User = require('./user')(sequelize, Sequelize);
+db.Comment = require('./comment')(sequelize, Sequelize);
+db.Image = require('./image')(sequelize, Sequelize);
+db.Tag = require('./tag')(sequelize, Sequelize);
+db.Category = require('./category')(sequelize, Sequelize);
 
 Object.keys(db).forEach((modelName) => {
 	if (db[modelName].associate) {
