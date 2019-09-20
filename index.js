@@ -9,6 +9,9 @@ const resolvers = require('./graphql/resolvers');
 
 const db = require('./models');
 
+const passport = require('passport');
+const passportConfig = require('./passport');
+
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 
@@ -19,7 +22,21 @@ dotenv.config();
 // Apollo Server Init
 const server = new ApolloServer({
 	typeDefs: gql(typeDefs),
-	resolvers
+	resolvers,
+	// Context object is one that gets passed to every single resolverr at every level
+	context: ({ req }) => {
+		// get the user token from the headers
+		const token = req.headers.authorization || '';
+		// try to retrieve a user with the toekn
+		const user = getUser(token);
+		// add the user to the context
+
+		// Optionally block the user
+
+		if (!user) throw new AuthenticationError('you must be logged in');
+		// {loggedIn: true}
+		return { user, db };
+	}
 });
 
 // Express Environment Setting
@@ -48,6 +65,9 @@ app.use(
 		name: 'sefqfzveeff'
 	})
 );
+app.use(passport.initialize());
+app.use(passport.session());
+passportConfig();
 
 //Database Init
 db.sequelize.sync();

@@ -160,4 +160,123 @@ $npm i sequelize-cli -g
 $sequelize init
 ```
 
-이러면 config, models, migration, seeders라는 폴더가 자동으로 생성됩니다. 
+이러면 config, models, migration, seeders라는 폴더가 자동으로 생성됩니다.   
+model폴더 안에 다음과 같이 각 테이블에 대한 스키마를 만들어 주면 됩니다.
+
+다음은 posts 테이블에 대해 기술한 부분입니다.
+
+```javascript
+module.exports = (sequelize, DataTypes) => {
+	// TABLE NAME : posts
+	const Post = sequelize.define(
+		'Post',
+		{
+			title: {
+				type: DataTypes.STRING(20),
+				allowNull: false
+			},
+			description: {
+				type: DataTypes.TEXT,
+				allowNull: false
+			}
+		},
+		{
+			charset: 'utf8',
+			collate: 'utf8_general_ci',
+			tableName: 'posts'
+		}
+	);
+	Post.associate = (db) => {
+		db.Post.belongsTo(db.User);
+		db.Post.hasMany(db.Comment);
+		db.Post.hasMany(db.Image);
+		db.Post.belongsToMany(db.Tag, { through: 'PostTag' });
+		db.Post.belongsToMany(db.User, { through: 'Like', as: 'Liker' });
+	};
+	return Post;
+};
+```
+
+## 프로젝트 초기 Index.js 설정
+
+```javascript
+const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+const expressSession = require('express-session');
+
+const { ApolloServer, gql } = require('apollo-server-express');
+const typeDefs = require('./graphql/schema');
+const resolvers = require('./graphql/resolvers');
+
+const db = require('./models');
+
+const dotenv = require('dotenv');
+const morgan = require('morgan');
+
+// Express App Init
+const app = express();
+dotenv.config();
+
+// Apollo Server Init
+const server = new ApolloServer({
+	typeDefs: gql(typeDefs),
+	resolvers,
+	context: { db }
+});
+
+// Express Environment Setting
+app.use(morgan('dev'));
+app.use(express.json());
+// JSON형태의 본문을 처리하는 express 미들웨어
+app.use(express.urlencoded({ extended: true }));
+// FORM을 처리해주는 express 미들웨어
+app.use(
+	cors({
+		origin: true,
+		credentials: true
+	})
+);
+app.use('/', express.static('public'));
+app.use(cookieParser(process.env.COOKIE_SECRET));
+app.use(
+	expressSession({
+		resave: false,
+		saveUninitialized: false,
+		secret: process.env.COOKIE_SECRET,
+		cookie: {
+			httpOnly: true,
+			secure: false
+		},
+		name: '...'
+	})
+);
+
+//Database Init
+db.sequelize.sync();
+
+// Express API
+server.applyMiddleware({ app, path: '/graphql' });
+
+//Starting Express App
+app.listen({ port: 8000 }, () => {
+	console.log('Apollo Server on ...');
+});
+
+```
+
+## 프로젝트 고찰
+
+### 01. Graph QL의 사용
+
+  2019년도 웹 개발 트렌드인 Graph QL을 서버측과 클라이언트 측 모두에서 사용해 보았다.   
+ 이를 사용해 본 후 느낀점은 GraphQL이 다양한 플랫폼과 다양한 서버 환경에서의 데이터 통신을 지원하며 API 호출간 불필요 한 오버 패치와 언더 패치를 방지해주는 유용한 기술 스택이라는 것을 알았다. 
+
+  일단 그래프 큐엘의 큰 장점 및 특징은 다음과 같다. 
+
+  - **다양한 환경**의 데이터를 집약할 수 있다. 데이터베이스, 레거시 API, 파일 시스템 등 다양한 환경에 접근할 수 있다.
+  - **다양한 플랫폼**에 데이터를 보낼 수 있다. 모바일(IOS, Android), 웹, IOT 전자기기 등 다양한 플랫폼에 대응 가능하다
+  - 데이터를 질의어 형식으로 교환하여 **불필요한 언더 패치와 오버 패치를 방지**할 수 있다.
+
+
+ 다만, GraphQL을 통한 인증(Authentication) 등 기타 몇몇 부분에서 문제가 발생한다고 한다. 따라서 하나의 기술 스택으로 생각하고 기존의 REST API와 같이 혼합해서 사용하면 백엔드와 프론트엔드간의 작업 효율을 향상시키고 다양한 플랫폼에 손쉽게 적용할 솔루션일 것이라 생각한다.

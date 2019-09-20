@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
 	const Tag = sequelize.define(
 		'Tag',
 		{
-			tag_name: {
+			name: {
 				type: DataTypes.STRING(20),
 				allowNull: false
 			}
