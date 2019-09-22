@@ -2,10 +2,12 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
+const fs = require('fs');
 
-const { ApolloServer, gql } = require('apollo-server-express');
+const { ApolloServer, gql, AuthenticationError } = require('apollo-server-express');
 const typeDefs = require('./graphql/schema');
 const resolvers = require('./graphql/resolvers');
+const { jwtSign, jwtVerify } = require('./graphql/authentication');
 
 const db = require('./models');
 
@@ -15,27 +17,35 @@ const passportConfig = require('./passport');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 
+const https = require('https');
+const http = require('http');
 // Express App Init
 const app = express();
 dotenv.config();
 
+const configurations = {
+	production: { ssl: true, port: 8000, hostname: 'example.com' },
+	development: { ssl: false, port: 4000, hostname: 'localhost' }
+};
+
+const environment = process.env.NODE_ENV || 'production';
+const config = configurations[environment];
+
 // Apollo Server Init
-const server = new ApolloServer({
+const apollo = new ApolloServer({
 	typeDefs: gql(typeDefs),
 	resolvers,
-	// Context object is one that gets passed to every single resolverr at every level
-	context: ({ req }) => {
-		// get the user token from the headers
+	// Context object is one that gets passed to every single resolverr
+	// at every level
+	context: async ({ req }) => {
 		const token = req.headers.authorization || '';
-		// try to retrieve a user with the toekn
-		const user = getUser(token);
-		// add the user to the context
-
-		// Optionally block the user
-
-		if (!user) throw new AuthenticationError('you must be logged in');
-		// {loggedIn: true}
-		return { user, db };
+		if (!token) {
+			console.log('토큰이 존재하지 않습니다.');
+			return { db };
+		}
+		const user = jwtVerify(req, token);
+		if (!user) throw new AuthenticationError('로그인이 필요합니다.');
+		return { db, user, logout: () => req.logout() };
 	}
 });
 
@@ -73,9 +83,25 @@ passportConfig();
 db.sequelize.sync();
 
 // Express API
-server.applyMiddleware({ app, path: '/graphql' });
+apollo.applyMiddleware({ app, path: '/graphql' });
+
+// Create the HTTPS or HTTP server
+// let server;
+// if (config.ssl) {
+// 	server = https.createServer(
+// 		{
+// 			key: fs.readFileSync(`./ssl/${environment}/server.key`),
+// 			cert: fs.readFileSync(`./ssl/${environment}/server.crt`)
+// 		},
+// 		app
+// 	);
+// } else {
+// 	server = http.createServer(app);
+// }
 
 //Starting Express App
-app.listen({ port: 8000 }, () => {
-	console.log('Apollo Server on http://localhost:8000/graphql');
+app.listen({ port: config.port }, () => {
+	console.log(
+		`Apollo Server ready at http${config.ssl ? 's' : ''}://${config.hostname}:${config.port}${apollo.graphqlPath}`
+	);
 });
