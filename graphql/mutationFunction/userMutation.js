@@ -1,11 +1,9 @@
 const { UserInputError } = require('apollo-server-express');
 const bcrypt = require('bcrypt-nodejs');
-const { jwtSign } = require('../authentication');
 
 exports.createUser = async (_, { userId, password, nickname, grant }, { db }, info) => {
 	try {
 		const exUser = await db.User.findOne({ where: { userId } });
-		console.log(exUser);
 		if (exUser)
 			throw new UserInputError('Username is taken', {
 				errors: {

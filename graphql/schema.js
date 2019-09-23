@@ -13,8 +13,8 @@ module.exports = `
         id: ID!
         description: String!
         createdAt: String!
-        user: User!
-        post: Post!
+        UserId: User!
+        PostId: Post!
     }
 
     type Post {
@@ -23,7 +23,6 @@ module.exports = `
         user: User!
         description: String!
         createdAt: String!
-        Comments: [Comment]
     }
 
     type Query{

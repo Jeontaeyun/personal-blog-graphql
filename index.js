@@ -37,15 +37,18 @@ const apollo = new ApolloServer({
 	resolvers,
 	// Context object is one that gets passed to every single resolverr
 	// at every level
-	context: async ({ req }) => {
+	context: async ({ req, res, next }) => {
 		const token = req.headers.authorization || '';
+		const logout = () => {
+			req.logout();
+		};
 		if (!token) {
 			console.log('토큰이 존재하지 않습니다.');
 			return { db };
 		}
 		const user = jwtVerify(req, token);
 		if (!user) throw new AuthenticationError('로그인이 필요합니다.');
-		return { db, user, logout: () => req.logout() };
+		return { db, user, logout };
 	}
 });
 
