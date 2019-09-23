@@ -1,5 +1,33 @@
 const { UserInputError } = require('apollo-server-express');
 const bcrypt = require('bcrypt-nodejs');
+const passport = require('passport');
+const passportConfig = require('../../passport');
+
+passportConfig();
+
+const loginFunction = async (userId, password, req) => {
+	return await new Promise((resolve, reject) => {
+		passport.authenticate('local', (e, user, info) => {
+			// Server Error
+			if (e) {
+				reject(e);
+				throw e;
+			}
+			// Logic Error
+			if (info) throw info.reason;
+			// No user
+			if (!user) {
+				reject(new Error('유저가 존재하지 않습니다.'));
+				throw new Error('유저가 존재하지 않습니다.');
+			}
+			// req.login is to establish a session and send a response
+			req.login(user, (loginError) => {
+				if (loginError) throw loginError;
+				resolve(user.toJSON());
+			});
+		})({ body: { userId, password } });
+	});
+};
 
 exports.createUser = async (_, { userId, password, nickname, grant }, { db }, info) => {
 	try {
@@ -25,5 +53,12 @@ exports.createUser = async (_, { userId, password, nickname, grant }, { db }, in
 	}
 };
 
-exports.login = (_, { userId, password }, { db, user }, info) => {};
-exports.logout = (_, args, { db, user, logout }, info) => logout();
+exports.login = async (_, { userId, password }, { req }, info) => {
+	const user = await loginFunction(userId, password, req);
+	return user;
+};
+exports.logout = (_, args, { user, req }, info) => {
+	const logoutedUser = user;
+	req.logout();
+	return logoutedUser;
+};

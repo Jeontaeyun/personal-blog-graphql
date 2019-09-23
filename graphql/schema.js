@@ -44,6 +44,6 @@ module.exports = `
         createLiked(id: ID!) : Int!
         deleteLiked(id: ID!) : Int!
         logout : Boolean
-        login: User!
+        login(userId : String!, password: String!): User!
     }
 `;

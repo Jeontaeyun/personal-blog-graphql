@@ -37,18 +37,15 @@ const apollo = new ApolloServer({
 	resolvers,
 	// Context object is one that gets passed to every single resolverr
 	// at every level
-	context: async ({ req, res, next }) => {
+	context: ({ req }) => {
 		const token = req.headers.authorization || '';
-		const logout = () => {
-			req.logout();
-		};
 		if (!token) {
 			console.log('토큰이 존재하지 않습니다.');
-			return { db };
+			return { db, req };
 		}
 		const user = jwtVerify(req, token);
 		if (!user) throw new AuthenticationError('로그인이 필요합니다.');
-		return { db, user, logout };
+		return { db, user, req };
 	}
 });
 
@@ -80,7 +77,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-passportConfig();
 
 //Database Init
 db.sequelize.sync();

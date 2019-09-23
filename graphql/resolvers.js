@@ -7,7 +7,10 @@ const likeMutation = require('./mutationFunction/likeMutation');
 module.exports = {
 	Query: {
 		...postQuery,
-		user: async (_, { userId }, { db }, info) => await db.User.findOne({ where: { userId } })
+		user: async (_, { userId }, { db, req }, info) => {
+			console.log(req.user);
+			return await db.User.findOne({ where: { userId } });
+		}
 	},
 	Mutation: {
 		...commentMutation,

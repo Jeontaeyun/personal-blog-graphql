@@ -21,7 +21,7 @@ exports.createPost = async (_, { title, description, tag }, { db, user }, info) 
 	}
 };
 
-exports.updatePost = async (_, { title, description, id }, { db, user }, info) => {
+exports.updatePost = async (_, { title, description, post_id }, { db, user }, info) => {
 	if (!user || !user.grant === 5) return null;
 	try {
 		await db.Post.update(
@@ -30,7 +30,7 @@ exports.updatePost = async (_, { title, description, id }, { db, user }, info) =
 				description: description
 			},
 			{
-				where: { id: id }
+				where: { id: post_id }
 			}
 		);
 	} catch (e) {
@@ -38,10 +38,10 @@ exports.updatePost = async (_, { title, description, id }, { db, user }, info) =
 	}
 };
 
-exports.deletePost = async (_, { id }, { db, user }, info) => {
+exports.deletePost = async (_, { post_id }, { db, user }, info) => {
 	if (!user || !user.grant === 5) return null;
 	try {
-		await db.Post.delete({ where: { id } });
+		await db.Post.delete({ where: { id: post_id } });
 	} catch (e) {
 		console.error(e);
 	}
