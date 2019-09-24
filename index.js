@@ -41,10 +41,10 @@ const apollo = new ApolloServer({
 			'request.credentials': 'include'
 		}
 	},
-	// Context object is one that gets passed to every single resolverr
-	// at every level
+	// Context object is one that gets passed to every single resolvers
+	// at every level.
 	context: ({ req }) => {
-		let user;
+		let user = null;
 		if (req.user) user = req.user.toJSON();
 		if (!user) {
 			console.log('유저가 존재하지 않습니다.');

@@ -13,14 +13,14 @@ module.exports = `
         id: ID!
         description: String!
         createdAt: String!
-        UserId: User!
-        PostId: Post!
+        User: User! 
+        PostId: Int!
     }
 
     type Post {
         id: ID!
         title: String!
-        user: User!
+        User: User!
         description: String!
         createdAt: String!
     }
@@ -38,11 +38,11 @@ module.exports = `
         createPost(title: String!, description: String!, tag: String!) : Post!
         updatePost(post_id: ID!, title: String!, description: String!): [Int!]!
         deletePost(post_id: ID!): Int!
-        createComment(description: String) : Comment!
+        createComment(post_id: ID! description: String!) : Comment!
         updateComment(comment_id: ID!, description: String!): [Int]!
         deleteComment(comment_id: ID!) : Int!
         createLiked(post_id: ID!) : Int!
-        deleteLiked(like_id: ID!) : Int!
+        deleteLiked(post_id: ID!) : Int!
         logout : User!
         login(userId : String!, password: String!): User!
     }
