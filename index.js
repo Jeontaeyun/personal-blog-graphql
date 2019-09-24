@@ -35,16 +35,21 @@ const config = configurations[environment];
 const apollo = new ApolloServer({
 	typeDefs: gql(typeDefs),
 	resolvers,
+	// For use request with same domain (In playground)
+	playground: {
+		settings: {
+			'request.credentials': 'include'
+		}
+	},
 	// Context object is one that gets passed to every single resolverr
 	// at every level
 	context: ({ req }) => {
-		const token = req.headers.authorization || '';
-		if (!token) {
-			console.log('토큰이 존재하지 않습니다.');
+		let user;
+		if (req.user) user = req.user.toJSON();
+		if (!user) {
+			console.log('유저가 존재하지 않습니다.');
 			return { db, req };
 		}
-		const user = jwtVerify(req, token);
-		if (!user) throw new AuthenticationError('로그인이 필요합니다.');
 		return { db, user, req };
 	}
 });

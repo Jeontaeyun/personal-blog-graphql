@@ -1,4 +1,6 @@
+const { AuthenticationError } = require('apollo-server-express');
 exports.createPost = async (_, { title, description, tag }, { db, user }, info) => {
+	if (!user || !user.grant === 5) throw new AuthenticationError('must be ADMIN');
 	try {
 		let tagArr;
 		if (tag) {
@@ -7,7 +9,7 @@ exports.createPost = async (_, { title, description, tag }, { db, user }, info) 
 		const newPost = await db.Post.create({
 			title,
 			description,
-			UserId: 2
+			UserId: user.id
 		});
 		if (tagArr) {
 			const tagResult = await Promise.all(
@@ -24,6 +26,7 @@ exports.createPost = async (_, { title, description, tag }, { db, user }, info) 
 };
 
 exports.updatePost = async (_, { post_id, title, description }, { db, user }, info) => {
+	if (!user && user.grant !== 5) throw new AuthenticationError('must be ADMIN');
 	try {
 		return await db.Post.update(
 			{
@@ -40,6 +43,7 @@ exports.updatePost = async (_, { post_id, title, description }, { db, user }, in
 };
 
 exports.deletePost = async (_, { post_id }, { db, user }, info) => {
+	if (!user && user.grant !== 5) throw new AuthenticationError('must be ADMIN');
 	try {
 		return await db.Post.destroy({ where: { id: post_id } });
 	} catch (e) {

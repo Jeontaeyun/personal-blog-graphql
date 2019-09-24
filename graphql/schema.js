@@ -43,7 +43,7 @@ module.exports = `
         deleteComment(comment_id: ID!) : Int!
         createLiked(post_id: ID!) : Int!
         deleteLiked(like_id: ID!) : Int!
-        logout : Boolean
+        logout : User!
         login(userId : String!, password: String!): User!
     }
 `;

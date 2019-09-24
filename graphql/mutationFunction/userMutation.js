@@ -59,6 +59,7 @@ exports.createUser = async (_, { userId, password, nickname, grant }, { db }, in
 
 exports.login = async (_, { userId, password }, { req }, info) => {
 	const user = await loginFunction(userId, password, req);
+	console.log(req.user.toJSON());
 	return user;
 };
 exports.logout = (_, args, { user, req }, info) => {
