@@ -38,16 +38,20 @@ exports.createUser = async (_, { userId, password, nickname, grant }, { db }, in
 					username: 'This username is taken'
 				}
 			});
-		await bcrypt.hash(password, null, null, (e, hashedPassword) => {
-			if (e) console.log(e);
-			const newUser = db.User.create({
-				userId,
-				password: hashedPassword,
-				nickname,
-				grant
+		const hashingUser = new Promise((resolve, reject) => {
+			// bcrypt can't use async/await
+			bcrypt.hash(password, null, null, async (e, hashedPassword) => {
+				if (e) reject(e);
+				const newUser = await db.User.create({
+					userId,
+					password: hashedPassword,
+					nickname,
+					grant
+				});
+				return resolve(newUser.toJSON());
 			});
-			return newUser;
 		});
+		return await hashingUser;
 	} catch (e) {
 		console.error(e);
 	}

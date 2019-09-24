@@ -1,6 +1,5 @@
 const passport = require('passport');
 const { Strategy: GitHubStrategy } = require('passport-github');
-const bcrypt = require('bcrypt-nodejs');
 const db = require('../models');
 
 module.exports = () => {

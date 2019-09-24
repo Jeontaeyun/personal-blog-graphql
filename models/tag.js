@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-	// TABLE NAME : posts
+	// TABLE NAME : tags
 	const Tag = sequelize.define(
 		'Tag',
 		{
@@ -15,7 +15,6 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	);
 	Tag.associate = (db) => {
-		// N:M의 관계는 중간관계를 정의하는 테이블을 through를 통해 제공해주어야한다.
 		db.Tag.belongsToMany(db.Post, { through: 'PostTag' });
 	};
 	return Tag;

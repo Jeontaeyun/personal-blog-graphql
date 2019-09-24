@@ -1,30 +1,31 @@
 exports.createPost = async (_, { title, description, tag }, { db, user }, info) => {
-	if (!user || !user.grant === 5) return null;
 	try {
-		const tagArr = tag.match(/#[^\s]+/g);
+		let tagArr;
+		if (tag) {
+			tagArr = tag.match(/#[^\s]+/g);
+		}
 		const newPost = await db.Post.create({
-			UserId: user.id,
 			title,
-			description
+			description,
+			UserId: 2
 		});
 		if (tagArr) {
 			const tagResult = await Promise.all(
-				tagArr.map((tags) => {
-					db.Tag.findOrCreate({ where: { name: tags.slice(1).toLowerCase() } });
+				tagArr.map(async (tags) => {
+					return await db.Tag.findOrCreate({ where: { name: tags.slice(1).toLowerCase() } });
 				})
 			);
-			await newPost.addPostTags(tagResult.map((r) => r[0]));
+			await newPost.addTags(tagResult.map((r) => r[0]));
 		}
-		return newPost;
+		return newPost.toJSON();
 	} catch (e) {
 		console.error(e);
 	}
 };
 
-exports.updatePost = async (_, { title, description, post_id }, { db, user }, info) => {
-	if (!user || !user.grant === 5) return null;
+exports.updatePost = async (_, { post_id, title, description }, { db, user }, info) => {
 	try {
-		await db.Post.update(
+		return await db.Post.update(
 			{
 				title: title,
 				description: description
@@ -39,9 +40,8 @@ exports.updatePost = async (_, { title, description, post_id }, { db, user }, in
 };
 
 exports.deletePost = async (_, { post_id }, { db, user }, info) => {
-	if (!user || !user.grant === 5) return null;
 	try {
-		await db.Post.delete({ where: { id: post_id } });
+		return await db.Post.destroy({ where: { id: post_id } });
 	} catch (e) {
 		console.error(e);
 	}

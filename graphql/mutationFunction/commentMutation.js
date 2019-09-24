@@ -1,5 +1,4 @@
 exports.createComment = async (_, { post_id, description }, { db, user }, info) => {
-	if (!user || !user.grant === 5) return null;
 	try {
 		const post = await db.Post.findOne({ where: { id: post_id } });
 		if (!post) throw Error('포스트가 존재하지 않습니다.');
@@ -25,7 +24,6 @@ exports.createComment = async (_, { post_id, description }, { db, user }, info) 
 	}
 };
 exports.updateComment = async (_, { comment_id, description }, { db, user }, info) => {
-	if (!user || !user.grant === 5) return null;
 	try {
 		const comment = await db.Comment.findOne({ where: { id: comment_id } });
 		if (!comment) throw new Error('댓글이 존재하지 않습니다.');
@@ -43,7 +41,6 @@ exports.updateComment = async (_, { comment_id, description }, { db, user }, inf
 	}
 };
 exports.deleteComment = async (_, { comment_id }, { db, user }, info) => {
-	if (!user || !user.grant === 5) return null;
 	try {
 		const comment = await db.Comment.findOne({ where: { id: comment_id } });
 		if (!comment) throw new Error('댓글이 존재하지 않습니다.');
