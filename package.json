@@ -4,7 +4,8 @@
 	"description": "Personal brading backend server",
 	"main": "index.js",
 	"scripts": {
-		"dev": "nodemon"
+		"dev": "nodemon",
+		"test": "jest"
 	},
 	"author": "\"Start\"",
 	"license": "MIT",
@@ -23,11 +24,14 @@
 		"jsonwebtoken": "^8.5.1",
 		"morgan": "^1.9.1",
 		"mysql2": "^1.7.0",
-		"nodemon": "^1.19.2",
 		"passport": "^0.4.0",
 		"passport-github": "^1.1.0",
 		"passport-local": "^1.0.0",
 		"sequelize": "^5.18.4",
 		"sequelize-cli": "^5.5.1"
+	},
+	"devDependencies": {
+		"nodemon": "^1.19.2",
+		"apollo-server-testing": "^2.9.4"
 	}
 }
