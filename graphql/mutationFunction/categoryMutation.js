@@ -1,4 +1,4 @@
-createCategory = async (_, { category_name }, { db, user }, info) => {
+const createCategory = async (_, { category_name }, { db, user }, info) => {
 	if (!user || !user.grant === 5) return new AuthenticationError('must be ADMIN');
 	try {
 		const exCategory = await db.Category.findOne({
@@ -14,7 +14,7 @@ createCategory = async (_, { category_name }, { db, user }, info) => {
 	}
 };
 
-updateCategory = async (_, { category_id, category_name }, { db, user }, info) => {
+const updateCategory = async (_, { category_id, category_name }, { db, user }, info) => {
 	if (!user || !user.grant === 5) return new AuthenticationError('must be ADMIN');
 	try {
 		const exCategory = await db.Category.findOne({
@@ -34,7 +34,7 @@ updateCategory = async (_, { category_id, category_name }, { db, user }, info) =
 	}
 };
 
-deleteCategory = async (_, { category_id }, { db, user }, info) => {
+const deleteCategory = async (_, { category_id }, { db, user }, info) => {
 	if (!user || !user.grant === 5) return new AuthenticationError('must be ADMIN');
 	try {
 		const exCategory = await db.Category.findOne({

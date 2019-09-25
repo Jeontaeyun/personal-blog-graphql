@@ -29,7 +29,7 @@ const loginFunction = async (userId, password, req) => {
 	});
 };
 
-createUser = async (_, { userId, password, nickname, grant }, { db }, info) => {
+const createUser = async (_, { userId, password, nickname, grant }, { db }, info) => {
 	try {
 		const exUser = await db.User.findOne({ where: { userId } });
 		if (exUser)
@@ -57,13 +57,13 @@ createUser = async (_, { userId, password, nickname, grant }, { db }, info) => {
 	}
 };
 
-login = async (_, { userId, password }, { req, user }, info) => {
+const login = async (_, { userId, password }, { req, user }, info) => {
 	if (!user) {
 		const user = await loginFunction(userId, password, req);
 		return user;
 	} else return new Error('이미 로그인 하였습니다. 로그아웃 해주세요');
 };
-logout = (_, args, { user, req }, info) => {
+const logout = (_, args, { user, req }, info) => {
 	if (user) {
 		const logoutedUser = user;
 		req.logout();

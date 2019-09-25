@@ -1,4 +1,4 @@
-createComment = async (_, { post_id, description }, { db, user }, info) => {
+const createComment = async (_, { post_id, description }, { db, user }, info) => {
 	if (!user) return new Error('로그인이 필요합니다.');
 	try {
 		const post = await db.Post.findOne({
@@ -25,7 +25,7 @@ createComment = async (_, { post_id, description }, { db, user }, info) => {
 		return new Error('데이터 베이스 오류');
 	}
 };
-updateComment = async (_, { comment_id, description }, { db, user }, info) => {
+const updateComment = async (_, { comment_id, description }, { db, user }, info) => {
 	if (!user) return new Error('로그인이 필요합니다.');
 	try {
 		const comment = await db.Comment.findOne({
@@ -45,7 +45,7 @@ updateComment = async (_, { comment_id, description }, { db, user }, info) => {
 		return new Error('데이터 베이스 오류');
 	}
 };
-deleteComment = async (_, { comment_id }, { db, user }, info) => {
+const deleteComment = async (_, { comment_id }, { db, user }, info) => {
 	if (!user) return new Error('로그인이 필요합니다.');
 	try {
 		const comment = await db.Comment.findOne({

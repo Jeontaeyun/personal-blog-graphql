@@ -20,17 +20,24 @@ module.exports = `
     type Post {
         id: ID!
         title: String!
-        User: User!
-        Category: Category!
         description: String!
         createdAt: String!
+        User: User!
+        Tags: [Tag!]!
+        Category: Category!
+        Liker : [User!]!
     }
     type Category{
         id: ID!
         name: String!
     }
+
+    type Tag {
+        id: ID!
+        name: String!
+    }
     type Query{
-        posts(limit: Int, ord: String): [Post!]!
+        posts(limit: Int, ord: String, category_id: Int ): [Post!]!
         post(post_id: ID!) : Post
         user(userId: ID!) : User!
         categorys : [Category!]!
@@ -44,8 +51,8 @@ module.exports = `
         updateCategory(category_id: Int!, category_name: String!) : [Int!]!
         deleteCategory(category_id: Int!): Int!
 
-        createPost(title: String!, description: String!, tag: String!) : Post!
-        updatePost(post_id: ID!, title: String!, description: String!): [Int!]!
+        createPost(title: String!, description: String!, tag: String!, category_id: Int!) : Post!
+        updatePost(post_id: ID!, title: String!, description: String!, tag: String!, category_id: Int!): [Int!]!
         deletePost(post_id: ID!): Int!
 
         createComment(post_id: ID! description: String!) : Comment!
@@ -54,7 +61,7 @@ module.exports = `
 
         createLiked(post_id: ID!) : Int!
         deleteLiked(post_id: ID!) : Int!
-        
+
         logout : User!
         login(userId : String!, password: String!): User!
     }

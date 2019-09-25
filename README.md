@@ -34,7 +34,7 @@
 
 ### 기본적인 서버 코드 작성하기 
 
-apollo-server를 이용하기 위해서 기본저으로 다음과 같이 index.js파일을 작성합니다.
+apollo-server를 이용하기 위해서 기본적으로 다음과 같이 index.js파일을 작성합니다.
 
 ```javascript
 const {ApolloServer, gql} = require('apollo-server');
@@ -77,7 +77,7 @@ server.listen().then(({url})=>{
 });
 ```
 
-- 위 코든느 typeDefs와 resolvers를 ApolloServer 생성자에 넘겨 GraphQL 서버 인스턴스를 생성하고 그 서버를 시작해주는 코드를 작성합니다. 
+- 위 코드는 typeDefs와 resolvers를 ApolloServer 생성자에 넘겨 GraphQL 서버 인스턴스를 생성하고 그 서버를 시작해주는 코드를 작성합니다. 
 
 ### 서버 구동
 

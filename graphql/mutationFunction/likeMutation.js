@@ -1,4 +1,4 @@
-createLiked = async (_, { post_id }, { db, user }, info) => {
+const createLiked = async (_, { post_id }, { db, user }, info) => {
 	if (!user) return new Error('로그인이 필요합니다.');
 	try {
 		const post = await db.Post.findOne({
@@ -12,7 +12,7 @@ createLiked = async (_, { post_id }, { db, user }, info) => {
 	}
 };
 
-deleteLiked = async (_, { post_id }, { db, user }, info) => {
+const deleteLiked = async (_, { post_id }, { db, user }, info) => {
 	if (!user) return new Error('로그인이 필요합니다.');
 	try {
 		const post = await db.Post.findOne({

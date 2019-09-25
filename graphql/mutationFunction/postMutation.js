@@ -1,6 +1,6 @@
 const { AuthenticationError } = require('apollo-server-express');
 
-tagAddFunction = async (newPost, tag, db) => {
+const tagAddFunction = async (newPost, tag, db) => {
 	try {
 		let tagArr;
 		if (tag) {
@@ -21,28 +21,43 @@ tagAddFunction = async (newPost, tag, db) => {
 	}
 };
 
-createPost = async (_, { title, description, tag }, { db, user }, info) => {
+const createPost = async (_, { title, description, tag, category_id }, { db, user }, info) => {
 	if (!user || !user.grant === 5) return new AuthenticationError('must be ADMIN');
 	try {
 		const newPost = await db.Post.create({
 			title,
 			description,
-			UserId: user.id
+			UserId: user.id,
+			CategoryId: category_id
 		});
 		tagAddFunction(newPost, tag, db);
-		return newPost.toJSON();
+		const post = await db.Post.findOne({
+			where: { id: newPost.id },
+			include: [
+				{
+					model: db.User,
+					attributes: [ 'id', 'nickname' ]
+				},
+				{
+					model: db.Category,
+					attributes: [ 'id', 'name' ]
+				}
+			]
+		});
+		return post.toJSON();
 	} catch (e) {
 		return new Error('데이터 베이스 오류');
 	}
 };
 
-updatePost = async (_, { post_id, title, description }, { db, user }, info) => {
+const updatePost = async (_, { post_id, title, description, category_id }, { db, user }, info) => {
 	if (!user && user.grant !== 5) return new AuthenticationError('must be ADMIN');
 	try {
 		return await db.Post.update(
 			{
 				title: title,
-				description: description
+				description: description,
+				CategoryId: category_id
 			},
 			{
 				where: { id: post_id }
@@ -53,7 +68,7 @@ updatePost = async (_, { post_id, title, description }, { db, user }, info) => {
 	}
 };
 
-deletePost = async (_, { post_id }, { db, user }, info) => {
+const deletePost = async (_, { post_id }, { db, user }, info) => {
 	if (!user && user.grant !== 5) return new AuthenticationError('must be ADMIN');
 	try {
 		return await db.Post.destroy({

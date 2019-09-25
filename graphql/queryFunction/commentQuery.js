@@ -1,4 +1,4 @@
-exports.comments = async (_, { post_id }, { db }, info) => {
+const comments = async (_, { post_id }, { db }, info) => {
 	try {
 		const post = await db.Post.findOne({ where: { post_id } });
 		if (!post) return new Error('포스트가 존재하지 않습니다.');
@@ -14,6 +14,10 @@ exports.comments = async (_, { post_id }, { db }, info) => {
 		});
 		return comments;
 	} catch (e) {
-		console.error(e);
+		return new Error('데이터 베이스 오류');
 	}
+};
+
+module.exports = {
+	comments
 };
