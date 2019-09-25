@@ -29,7 +29,7 @@ const loginFunction = async (userId, password, req) => {
 	});
 };
 
-exports.createUser = async (_, { userId, password, nickname, grant }, { db }, info) => {
+createUser = async (_, { userId, password, nickname, grant }, { db }, info) => {
 	try {
 		const exUser = await db.User.findOne({ where: { userId } });
 		if (exUser)
@@ -57,16 +57,22 @@ exports.createUser = async (_, { userId, password, nickname, grant }, { db }, in
 	}
 };
 
-exports.login = async (_, { userId, password }, { req, user }, info) => {
+login = async (_, { userId, password }, { req, user }, info) => {
 	if (!user) {
 		const user = await loginFunction(userId, password, req);
 		return user;
 	} else return new Error('이미 로그인 하였습니다. 로그아웃 해주세요');
 };
-exports.logout = (_, args, { user, req }, info) => {
+logout = (_, args, { user, req }, info) => {
 	if (user) {
 		const logoutedUser = user;
 		req.logout();
 		return logoutedUser;
 	} else return new Error('로그인 된 유저가 없습니다.');
+};
+
+module.exports = {
+	login,
+	logout,
+	createUser
 };

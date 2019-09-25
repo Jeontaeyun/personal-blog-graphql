@@ -1,31 +1,42 @@
 const { AuthenticationError } = require('apollo-server-express');
-exports.createPost = async (_, { title, description, tag }, { db, user }, info) => {
-	if (!user || !user.grant === 5) return new AuthenticationError('must be ADMIN');
+
+tagAddFunction = async (newPost, tag, db) => {
 	try {
 		let tagArr;
 		if (tag) {
 			tagArr = tag.match(/#[^\s]+/g);
 		}
+		if (tagArr) {
+			const tagResult = await Promise.all(
+				tagArr.map(async (tags) => {
+					return await db.Tag.findOrCreate({
+						where: { name: tags.slice(1).toLowerCase() }
+					});
+				})
+			);
+			return await newPost.addTags(tagResult.map((r) => r[0]));
+		}
+	} catch (e) {
+		return new Error('태그 추가 에러');
+	}
+};
+
+createPost = async (_, { title, description, tag }, { db, user }, info) => {
+	if (!user || !user.grant === 5) return new AuthenticationError('must be ADMIN');
+	try {
 		const newPost = await db.Post.create({
 			title,
 			description,
 			UserId: user.id
 		});
-		if (tagArr) {
-			const tagResult = await Promise.all(
-				tagArr.map(async (tags) => {
-					return await db.Tag.findOrCreate({ where: { name: tags.slice(1).toLowerCase() } });
-				})
-			);
-			await newPost.addTags(tagResult.map((r) => r[0]));
-		}
+		tagAddFunction(newPost, tag, db);
 		return newPost.toJSON();
 	} catch (e) {
-		console.error(e);
+		return new Error('데이터 베이스 오류');
 	}
 };
 
-exports.updatePost = async (_, { post_id, title, description }, { db, user }, info) => {
+updatePost = async (_, { post_id, title, description }, { db, user }, info) => {
 	if (!user && user.grant !== 5) return new AuthenticationError('must be ADMIN');
 	try {
 		return await db.Post.update(
@@ -38,15 +49,23 @@ exports.updatePost = async (_, { post_id, title, description }, { db, user }, in
 			}
 		);
 	} catch (e) {
-		console.error(e);
+		return new Error('데이터 베이스 오류');
 	}
 };
 
-exports.deletePost = async (_, { post_id }, { db, user }, info) => {
+deletePost = async (_, { post_id }, { db, user }, info) => {
 	if (!user && user.grant !== 5) return new AuthenticationError('must be ADMIN');
 	try {
-		return await db.Post.destroy({ where: { id: post_id } });
+		return await db.Post.destroy({
+			where: { id: post_id }
+		});
 	} catch (e) {
-		console.error(e);
+		return new Error('데이터 베이스 오류');
 	}
+};
+
+module.exports = {
+	createPost,
+	updatePost,
+	deletePost
 };

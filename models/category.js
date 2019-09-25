@@ -14,6 +14,8 @@ module.exports = (sequelize, DataTypes) => {
 			tableName: 'categorys'
 		}
 	);
-	Category.associate = (db) => {};
+	Category.associate = (db) => {
+		db.Category.hasMany(db.Post);
+	};
 	return Category;
 };
