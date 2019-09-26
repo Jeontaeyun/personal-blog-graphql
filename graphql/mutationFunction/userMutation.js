@@ -22,8 +22,8 @@ const loginFunction = async (userId, password, req) => {
 			}
 			// req.login is to establish a session and send a response
 			req.login(user, (loginError) => {
-				if (loginError) throw loginError;
-				resolve(user.toJSON());
+				if (loginError) resolve(loginError);
+				resolve(user);
 			});
 		})({ body: { userId, password } });
 	});
@@ -33,7 +33,7 @@ const createUser = async (_, { userId, password, nickname, grant }, { db }, info
 	try {
 		const exUser = await db.User.findOne({ where: { userId } });
 		if (exUser)
-			throw new UserInputError('Username is taken', {
+			return new UserInputError('Username is taken', {
 				errors: {
 					username: 'This username is taken'
 				}

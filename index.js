@@ -4,8 +4,8 @@ const cookieParser = require('cookie-parser');
 const expressSession = require('express-session');
 const fs = require('fs');
 
-const { ApolloServer, gql } = require('apollo-server-express');
-const { schema, resolvers } = require('./graphql');
+const { ApolloServer } = require('apollo-server-express');
+const graphqlConfig = require('./graphql');
 const { jwtSign, jwtVerify } = require('./graphql/authentication');
 
 const db = require('./models');
@@ -32,9 +32,7 @@ const config = configurations[environment];
 
 // Apollo Server Init
 const apollo = new ApolloServer({
-	typeDefs: gql(schema),
-	resolvers,
-	// For use request with same domain (In playground)
+	...graphqlConfig,
 	playground: {
 		settings: {
 			'request.credentials': 'include'
