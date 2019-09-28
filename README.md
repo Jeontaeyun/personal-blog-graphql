@@ -10,7 +10,7 @@
 
  03. 아키텍쳐 설계 - 프로젝트 환경 설정 - 개발 - 배포의 과정 
 
- ## 그래프 큐엘 Setting
+ ## 그래프 큐엘 설정
 
  ### 프로젝트 환경 구성
 
@@ -101,7 +101,7 @@ $curl -X POST "http;//localhost:4000" -H "content-type: application/json" -d '{"
     - 원격 서버(FTP, HTTP등)에서 파일을 받아 보여주는 도구입니다. 
 - 또한 Graph QL 서버는 Playground라고 하는 웹 기반 툴이 있어서 브라우저에서도 쿼리를 확인할 수 있다는 장점이 있습니다.
 
- ## 익스프레스 Setting
+ ## 익스프레스 설정
 
 ```bash
  $npm i apollo-server-express
@@ -264,6 +264,82 @@ app.listen({ port: 8000 }, () => {
 });
 
 ```
+
+## JEST와 apollo-server-testing 라이브러리 설정
+
+apollo-server-testing 라이브러리와 JEST를 이용해 Apollo-Server를 테스트 하는 방식은 다음과 같다.
+
+먼저, GraphQL의 typeDefs와 schema를 넣은 testServer를 생성
+
+```javascript
+const { ApolloServer } = require('apollo-server');
+const graphqlConfig = require('../graphql');
+const db = require('../models');
+const baseContext = {
+	req: {
+		user: null,
+		login: (user, cb) => {
+			this.user = user;
+			baseContext.user = user;
+			cb();
+		},
+		logout: () => {
+			baseContext.user = null;
+			this.user = null;
+		}
+	},
+	db,
+	user: null
+};
+
+module.exports = {
+	testServer: new ApolloServer({
+		...graphqlConfig,
+		context: baseContext
+	}),
+	baseContext
+};
+```
+
+ context에 express와 연동된 부분을 넣는 것 보단 Mock을 구현해볼 겸 passport.js 기능과 req를 구현하여 basecontext에 넣어주었다.  
+ 이 후 다음과 같이 testClient를 생성해줍니다. 
+
+ ```javascript
+const { testServer } = require('./mockTestServer');
+const { gql } = require('apollo-server-express');
+const { createTestClient } = require('apollo-server-testing');
+const dotenv = require('dotenv');
+dotenv.config();
+
+const { query, mutate } = createTestClient(testServer);
+ ```
+
+ 위에서 생성 된 query와 mutate와 JEST의 함수를 이용해 다음과 같이 Apollo-Server를 테스트 할 수 있습니다.
+
+ ```javascript
+ describe('테스트 그룹 단위', () => {
+	it('유저를 생성하는 테스트', async () => {
+		const CREATE_USER = gql`
+			mutation($userId: String!, $password: String!, $grant: Int!, $nickname: String!) {
+				createUser(userId: $userId, password: $password, grant: $grant, nickname: $nickname) {
+					id
+					userId
+					nickname
+					grant
+				}
+			}
+		`;
+		const { data: { createUser } } = await mutate({
+			mutation: CREATE_USER,
+			variables: testUser
+		});
+		const { userId, grant, nickname } = testUser;
+		testUser['id'] = createUser.id;
+		expect(createUser).toEqual({ id: createUser.id, userId, grant, nickname });
+	});
+	...
+ ```
+ 
 
 ## 프로젝트 고찰
 
