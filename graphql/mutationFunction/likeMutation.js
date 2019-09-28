@@ -11,7 +11,6 @@ const createLiked = async (_, { post_id }, { db, user }, info) => {
 		return new Error('데이터 베이스 오류');
 	}
 };
-
 const deleteLiked = async (_, { post_id }, { db, user }, info) => {
 	if (!user) return new Error('로그인이 필요합니다.');
 	try {
@@ -25,7 +24,6 @@ const deleteLiked = async (_, { post_id }, { db, user }, info) => {
 		return new Error('데이터 베이스 오류');
 	}
 };
-
 module.exports = {
 	createLiked,
 	deleteLiked

@@ -8,7 +8,7 @@ const { query, mutate } = createTestClient(testServer);
 
 const testUser = {
 	id: 0,
-	userId: 'test34',
+	userId: 'tes53',
 	password: process.env.TEST_PASSWORD,
 	grant: 5,
 	nickname: 'testUser01'
@@ -16,7 +16,7 @@ const testUser = {
 
 const testCategory = {
 	id: 0,
-	name: '카테고리22'
+	name: '카테고리41'
 };
 
 const testPost = {
@@ -24,6 +24,11 @@ const testPost = {
 	title: '테스트 타이틀',
 	description: '테스트 본문',
 	tag: '#테스트태그01 #테스트태그02 #테스트태그03'
+};
+
+const testComment = {
+	id: 0,
+	description: '테스트 댓글'
 };
 
 describe('Integration Test', () => {
@@ -46,7 +51,6 @@ describe('Integration Test', () => {
 		testUser['id'] = createUser.id;
 		expect(createUser).toEqual({ id: createUser.id, userId, grant, nickname });
 	});
-
 	it('create user Error with exuser', async () => {
 		const CREATE_USER = gql`
 			mutation($userId: String!, $password: String!, $grant: Int!, $nickname: String!) {
@@ -85,7 +89,6 @@ describe('Integration Test', () => {
 	// 	console.log(result);
 	// 	return expect(result).toEqual('존재하지 않는 사용자입니다.');
 	// });
-
 	it('login succes', async () => {
 		const LOGIN = gql`
 			mutation($userId: String!, $password: String!) {
@@ -104,7 +107,6 @@ describe('Integration Test', () => {
 		});
 		expect(login).toEqual({ id, userId, grant, nickname });
 	});
-
 	it('create category', async () => {
 		const { name } = testCategory;
 		const CREATE_CATEGORY = gql`
@@ -124,7 +126,6 @@ describe('Integration Test', () => {
 		testCategory['id'] = createCategory.id;
 		expect(createCategory).toEqual({ id: createCategory.id, name });
 	});
-
 	it('create category Error with excategory', async () => {
 		const { name } = testCategory;
 		const CREATE_CATEGORY = gql`
@@ -143,7 +144,6 @@ describe('Integration Test', () => {
 		});
 		expect(errors[0].message).toBe('중복된 카테고리입니다.');
 	});
-
 	it('create post', async () => {
 		const { id: user_id, nickname } = testUser;
 		const { title, description, tag } = testPost;
@@ -203,7 +203,6 @@ describe('Integration Test', () => {
 			}
 		});
 	});
-
 	it('read post', async () => {
 		const { id: user_id, userId, nickname } = testUser;
 		const { id: post_id, title, description } = testPost;
@@ -259,7 +258,6 @@ describe('Integration Test', () => {
 			}
 		});
 	});
-
 	it('read post Error with no post', async () => {
 		const POST = gql`
 			query($post_id: ID!) {
@@ -289,68 +287,257 @@ describe('Integration Test', () => {
 		});
 		expect(errors[0].message).toBe('포스트가 존재하지 않습니다.');
 	});
-
 	it('update post', async () => {
-		expect(2).toBe(2);
-	});
+		const { id: post_id } = testPost;
+		const UPDATE_POST = gql`
+			mutation($post_id: ID!, $title: String!, $description: String!, $tag: String) {
+				updatePost(post_id: $post_id, title: $title, description: $description, tag: $tag)
+			}
+		`;
+		const { data: { updatePost } } = await mutate({
+			mutation: UPDATE_POST,
+			variables: {
+				post_id,
+				title: '수정된 타이틀',
+				description: '수정된 본문',
+				tag: '#수정된태그01 #수정된태그02 #수정된태그03'
+			}
+		});
 
+		expect(updatePost).toEqual([ 1 ]);
+	});
 	it('update post Error with no post', async () => {
-		expect(2).toBe(2);
-	});
+		const UPDATE_POST = gql`
+			mutation($post_id: ID!, $title: String!, $description: String!, $tag: String) {
+				updatePost(post_id: $post_id, title: $title, description: $description, tag: $tag)
+			}
+		`;
+		const { errors } = await mutate({
+			mutation: UPDATE_POST,
+			variables: {
+				post_id: 'wrong_id',
+				title: '수정된 타이틀',
+				description: '수정된 본문',
+				tag: '#수정된태그01 #수정된태그02 #수정된태그03'
+			}
+		});
 
-	it('delete post', async () => {
-		expect(2).toBe(2);
+		expect(errors[0].message).toBe('포스트가 존재하지 않습니다.');
 	});
-	it('delete post Error with no post', async () => {
-		expect(2).toBe(2);
-	});
-
 	it('ceate like', async () => {
-		expect(2).toBe(2);
+		const { id: post_id } = testPost;
+		const { id: user_id } = testUser;
+		const CREATE_LIKED = gql`
+			mutation($post_id: ID!) {
+				createLiked(post_id: $post_id)
+			}
+		`;
+		const { data: { createLiked } } = await mutate({
+			mutation: CREATE_LIKED,
+			variables: {
+				post_id
+			}
+		});
+		expect(createLiked).toBe(Number(user_id));
 	});
-
 	it('ceate like Error with no post', async () => {
-		expect(2).toBe(2);
-	});
+		const CREATE_LIKED = gql`
+			mutation($post_id: ID!) {
+				createLiked(post_id: $post_id)
+			}
+		`;
+		const { errors } = await mutate({
+			mutation: CREATE_LIKED,
+			variables: {
+				post_id: 'wrong_id'
+			}
+		});
 
+		expect(errors[0].message).toBe('포스트가 존재하지 않습니다.');
+	});
 	it('delete like', async () => {
-		expect(2).toBe(2);
-	});
+		const { id: post_id } = testPost;
+		const { id: user_id } = testUser;
+		const DELETE_LIKED = gql`
+			mutation($post_id: ID!) {
+				deleteLiked(post_id: $post_id)
+			}
+		`;
+		const { data: { deleteLiked } } = await mutate({
+			mutation: DELETE_LIKED,
+			variables: {
+				post_id
+			}
+		});
 
+		expect(deleteLiked).toBe(Number(user_id));
+	});
 	it('delete like Error with no post', async () => {
-		expect(2).toBe(2);
-	});
+		const DELETE_LIKED = gql`
+			mutation($post_id: ID!) {
+				deleteLiked(post_id: $post_id)
+			}
+		`;
+		const { errors } = await mutate({
+			mutation: DELETE_LIKED,
+			variables: {
+				post_id: 'wrong_id'
+			}
+		});
 
+		expect(errors[0].message).toBe('포스트가 존재하지 않습니다.');
+	});
 	it('create comment', async () => {
-		expect(2).toBe(2);
+		const { id: post_id } = testPost;
+		const { id: user_id, nickname } = testUser;
+		const { description } = testComment;
+		const CREATE_COMMENT = gql`
+			mutation($post_id: ID!, $description: String!) {
+				createComment(post_id: $post_id, description: $description) {
+					id
+					description
+					User {
+						id
+						nickname
+					}
+					PostId
+				}
+			}
+		`;
+		const { data: { createComment } } = await mutate({
+			mutation: CREATE_COMMENT,
+			variables: {
+				post_id,
+				description
+			}
+		});
+		testComment['id'] = createComment.id;
+		expect(createComment).toEqual({
+			id: createComment.id,
+			description,
+			User: {
+				id: user_id,
+				nickname
+			},
+			PostId: Number(post_id)
+		});
 	});
-
-	it('create comment Error with no access', async () => {
-		expect(2).toBe(2);
-	});
-
 	it('create comment Error with no post', async () => {
-		expect(2).toBe(2);
+		const { description } = testComment;
+		const CREATE_COMMENT = gql`
+			mutation($post_id: ID!, $description: String!) {
+				createComment(post_id: $post_id, description: $description) {
+					id
+					description
+					User {
+						id
+						nickname
+					}
+					PostId
+				}
+			}
+		`;
+		const { errors } = await mutate({
+			mutation: CREATE_COMMENT,
+			variables: {
+				post_id: 'wrong_id',
+				description
+			}
+		});
+		expect(errors[0].message).toBe('포스트가 존재하지 않습니다.');
 	});
 	it('update comment', async () => {
-		expect(2).toBe(2);
+		const { id: comment_id } = testComment;
+		const UPDATE_COMMENT = gql`
+			mutation($comment_id: ID!, $description: String!) {
+				updateComment(comment_id: $comment_id, description: $description)
+			}
+		`;
+		const { data: { updateComment } } = await mutate({
+			mutation: UPDATE_COMMENT,
+			variables: {
+				comment_id,
+				description: '수정된 댓글'
+			}
+		});
+		expect(updateComment).toEqual([ 1 ]);
 	});
-	it('update comment Error with no access', async () => {
-		expect(2).toBe(2);
-	});
+	it('update comment Error with no Comment', async () => {
+		const UPDATE_COMMENT = gql`
+			mutation($comment_id: ID!, $description: String!) {
+				updateComment(comment_id: $comment_id, description: $description)
+			}
+		`;
+		const { errors } = await mutate({
+			mutation: UPDATE_COMMENT,
+			variables: {
+				comment_id: 'wrong_id',
+				description: '수정된 댓글'
+			}
+		});
 
-	it('update comment Error with no post', async () => {
-		expect(2).toBe(2);
+		expect(errors[0].message).toBe('댓글이 존재하지 않습니다.');
 	});
 	it('delete comment', async () => {
-		expect(2).toBe(2);
-	});
-	it('delete comment Error with no access', async () => {
-		expect(2).toBe(2);
-	});
+		const { id: comment_id } = testComment;
+		const DELETE_COMMENT = gql`
+			mutation($comment_id: ID!) {
+				deleteComment(comment_id: $comment_id)
+			}
+		`;
+		const { data: { deleteComment } } = await mutate({
+			mutation: DELETE_COMMENT,
+			variables: {
+				comment_id
+			}
+		});
 
-	it('delete comment Error with no post', async () => {
-		expect(2).toBe(2);
+		expect(deleteComment).toBe(1);
+	});
+	it('delete comment Error with no Comment', async () => {
+		const DELETE_COMMENT = gql`
+			mutation($comment_id: ID!) {
+				deleteComment(comment_id: $comment_id)
+			}
+		`;
+		const { errors } = await mutate({
+			mutation: DELETE_COMMENT,
+			variables: {
+				comment_id: 'wrong_id'
+			}
+		});
+		expect(errors[0].message).toBe('댓글이 존재하지 않습니다.');
+	});
+	it('delete post', async () => {
+		const { id: post_id } = testPost;
+		const DELETE_POST = gql`
+			mutation($post_id: ID!) {
+				deletePost(post_id: $post_id)
+			}
+		`;
+		const { data: { deletePost } } = await mutate({
+			mutation: DELETE_POST,
+			variables: {
+				post_id: post_id
+			}
+		});
+
+		expect(deletePost).toBe(1);
+	});
+	it('delete post Error with no post', async () => {
+		const DELETE_POST = gql`
+			mutation($post_id: ID!) {
+				deletePost(post_id: $post_id)
+			}
+		`;
+		const { errors } = await mutate({
+			mutation: DELETE_POST,
+			variables: {
+				post_id: 'wrong_id'
+			}
+		});
+
+		expect(errors[0].message).toBe('포스트가 존재하지 않습니다.');
 	});
 	it('logout', async () => {
 		const LOGOUT = gql`

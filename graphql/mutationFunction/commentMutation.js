@@ -32,7 +32,7 @@ const updateComment = async (_, { comment_id, description }, { db, user }, info)
 			where: { id: comment_id }
 		});
 		if (!comment) return new Error('댓글이 존재하지 않습니다.');
-		if (!comment.UserId !== user.id) return new Error('해당 댓글에 대한 권한이 없습니다.');
+		if (comment.UserId !== user.id) return new Error('해당 댓글에 대한 권한이 없습니다.');
 		return await db.Comment.update(
 			{
 				description
@@ -52,7 +52,7 @@ const deleteComment = async (_, { comment_id }, { db, user }, info) => {
 			where: { id: comment_id }
 		});
 		if (!comment) return new Error('댓글이 존재하지 않습니다.');
-		if (!comment.UserId !== user.id) return new Error('해당 댓글에 대한 권한이 없습니다.');
+		if (comment.UserId !== user.id) return new Error('해당 댓글에 대한 권한이 없습니다.');
 		return await db.Comment.destroy({
 			where: { id: comment_id }
 		});

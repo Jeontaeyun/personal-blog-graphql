@@ -21,6 +21,14 @@ const tagAddFunction = async (newPost, tag, db) => {
 	}
 };
 
+const tagRemoveFunction = async (post, db) => {
+	try {
+		return db.Tag.removePost(post.id);
+	} catch (e) {
+		return new Error('태그 삭제 에러');
+	}
+};
+
 const createPost = async (_, { title, description, tag, category_id }, { db, user }, info) => {
 	if (!user || !user.grant === 5) return new AuthenticationError('must be ADMIN');
 	try {
@@ -56,8 +64,16 @@ const createPost = async (_, { title, description, tag, category_id }, { db, use
 	}
 };
 
-const updatePost = async (_, { post_id, title, description, category_id }, { db, user }, info) => {
+const updatePost = async (_, { post_id, title, description, category_id, tag }, { db, user }, info) => {
 	if (!user && user.grant !== 5) return new AuthenticationError('must be ADMIN');
+	const post = await db.Post.findOne({
+		where: { id: post_id }
+	});
+	if (!post) return new Error('포스트가 존재하지 않습니다.');
+	if (tag) {
+		await tagRemoveFunction(post, db);
+		await tagAddFunction(post, tag, db);
+	}
 	try {
 		return await db.Post.update(
 			{
@@ -77,6 +93,10 @@ const updatePost = async (_, { post_id, title, description, category_id }, { db,
 const deletePost = async (_, { post_id }, { db, user }, info) => {
 	if (!user && user.grant !== 5) return new AuthenticationError('must be ADMIN');
 	try {
+		const post = await db.Post.findOne({
+			where: { id: post_id }
+		});
+		if (!post) return new Error('포스트가 존재하지 않습니다.');
 		return await db.Post.destroy({
 			where: { id: post_id }
 		});
