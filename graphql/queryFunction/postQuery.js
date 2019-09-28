@@ -35,11 +35,11 @@ const posts = async (_, { limit, ord = 'DESC', category_id = 0 }, { db, user }, 
 				{
 					model: db.Tag,
 					through: 'PostTag',
+					as: 'Tags',
 					attributes: [ 'id', 'name' ]
 				}
 			]
 		});
-		console.log(posts[0]);
 		return posts;
 	} catch (e) {
 		return new Error('데이터 베이스 오류');
@@ -52,13 +52,27 @@ const post = async (_, { post_id }, { db, user }, info) => {
 			include: [
 				{
 					model: db.User,
+					attributes: [ 'id', 'nickname' ]
+				},
+				{
+					model: db.Category,
+					attributes: [ 'id', 'name' ]
+				},
+				{
+					model: db.Tag,
+					through: 'PostTag',
+					as: 'Tags',
+					attributes: [ 'id', 'name' ]
+				},
+				{
+					model: db.User,
 					through: 'Like',
 					as: 'Liker',
 					attributes: [ 'id' ]
 				}
 			]
 		});
-		if (!post) throw new Error('포스트가 존재하지 않습니다.');
+		if (!post) return new Error('포스트가 존재하지 않습니다.');
 		return post.toJSON();
 	} catch (e) {
 		return new Error('데이터 베이스 오류');

@@ -51,8 +51,8 @@ module.exports = `
         updateCategory(category_id: Int!, category_name: String!) : [Int!]!
         deleteCategory(category_id: Int!): Int!
 
-        createPost(title: String!, description: String!, tag: String!, category_id: Int!) : Post!
-        updatePost(post_id: ID!, title: String!, description: String!, tag: String!, category_id: Int!): [Int!]!
+        createPost(title: String!, description: String!, tag: String!, category_id: ID!) : Post!
+        updatePost(post_id: ID!, title: String!, description: String!, tag: String!, category_id: ID!): [Int!]!
         deletePost(post_id: ID!): Int!
 
         createComment(post_id: ID! description: String!) : Comment!

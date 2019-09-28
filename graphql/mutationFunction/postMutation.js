@@ -30,7 +30,7 @@ const createPost = async (_, { title, description, tag, category_id }, { db, use
 			UserId: user.id,
 			CategoryId: category_id
 		});
-		tagAddFunction(newPost, tag, db);
+		await tagAddFunction(newPost, tag, db);
 		const post = await db.Post.findOne({
 			where: { id: newPost.id },
 			include: [
@@ -40,6 +40,12 @@ const createPost = async (_, { title, description, tag, category_id }, { db, use
 				},
 				{
 					model: db.Category,
+					attributes: [ 'id', 'name' ]
+				},
+				{
+					model: db.Tag,
+					through: 'PostTag',
+					as: 'Tags',
 					attributes: [ 'id', 'name' ]
 				}
 			]
