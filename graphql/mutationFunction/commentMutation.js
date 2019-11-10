@@ -61,8 +61,28 @@ const deleteComment = async (_, { comment_id }, { db, user }, info) => {
 	}
 };
 
+const createRecomment = async (_, { post_id, comment_id, description }, { db, user }, info) => {
+	if (!user) return new Error('로그인이 필요합니다.');
+	try {
+		const comment = await db.Comment.findOne({
+			where: { id: comment_id }
+		});
+		if (!comment) return new Error('댓글이 존재하지 않습니다.');
+		const newReComment = db.Comment.create({
+			description: description,
+			UserId: user.id,
+			PostId: post_id,
+			RecommentId: comment_id
+		});
+		return newReComment;
+	} catch (e) {
+		return new Error('데이터 베이스 오류');
+	}
+};
+
 module.exports = {
 	createComment,
 	updateComment,
-	deleteComment
+	deleteComment,
+	createRecomment
 };

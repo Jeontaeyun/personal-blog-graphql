@@ -33,5 +33,16 @@
 	"devDependencies": {
 		"nodemon": "^1.19.2",
 		"apollo-server-testing": "^2.9.4"
+	},
+	"prettier": {
+		"printWidth": 100,
+		"tabWidth": 4,
+		"singleQuote": false,
+		"trailingComma": "all",
+		"bracketSpacing": true,
+		"semi": true,
+		"useTabs": false,
+		"arrowParens": "avoid",
+		"endOfLine": "lf"
 	}
 }
