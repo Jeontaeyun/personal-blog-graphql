@@ -1,0 +1,89 @@
+Arguments: 
+  /usr/local/bin/node /usr/local/bin/yarn add @types/express @types/passport
+
+PATH: 
+  /Users/jeontaeyun/.rbenv/shims:/Users/jeontaeyun/.rbenv/bin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/Users/jeontaeyun/.rbenv/shims:/Users/jeontaeyun/.rbenv/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Users/jeontaeyun/.rbenv/shims:/Users/jeontaeyun/.rbenv/bin:/Library/Frameworks/Python.framework/Versions/3.7/bin
+
+Yarn version: 
+  1.17.3
+
+Node version: 
+  10.16.3
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: EACCES: permission denied, mkdir '/Users/jeontaeyun/Desktop/JeonTaeyun/ProgrammerLife/Project/Personal Branding Blog/personal-branding-back/node_modules/@types/passport'
+
+npm manifest: 
+  {
+      "name": "personal-branding-back",
+      "version": "1.0.0",
+      "description": "Personal brading backend server",
+      "keywords": [
+          "blog",
+          "mysql",
+          "graphql",
+          "express"
+      ],
+      "main": "index.js",
+      "scripts": {
+          "dev": "nodemon",
+          "fix:tslint": "tslint --project tsconfig.json --fix ",
+          "fix:prettier": "prettier --write \"src/**/*.{ts,tsx,js]\"",
+          "fix": "yarn fix:prettier &s yarn fix:tslint",
+          "test": "jest"
+      },
+      "author": {
+          "name": "Stark Jeon",
+          "email": "a01058406602@gmail.com"
+      },
+      "repository": {
+          "type": "git",
+          "url": "https://github.com/Jeontaeyun/personal-blog-graphql"
+      },
+      "license": "MIT",
+      "dependencies": {
+          "apollo-server": "^2.9.3",
+          "apollo-server-express": "^2.9.3",
+          "bcrypt-nodejs": "0.0.3",
+          "cookie-parser": "^1.4.4",
+          "cors": "^2.8.5",
+          "dotenv": "^8.1.0",
+          "express": "^4.17.1",
+          "express-session": "^1.16.2",
+          "graphql": "^14.5.6",
+          "http": "0.0.0",
+          "https": "^1.0.0",
+          "jsonwebtoken": "^8.5.1",
+          "morgan": "^1.9.1",
+          "mysql2": "^1.7.0",
+          "passport": "^0.4.0",
+          "passport-github": "^1.1.0",
+          "passport-local": "^1.0.0",
+          "sequelize": "^5.18.4",
+          "sequelize-cli": "^5.5.1"
+      },
+      "devDependencies": {
+          "nodemon": "^1.19.2",
+          "apollo-server-testing": "^2.9.4"
+      },
+      "prettier": {
+          "printWidth": 100,
+          "tabWidth": 4,
+          "singleQuote": false,
+          "trailingComma": "all",
+          "bracketSpacing": true,
+          "semi": true,
+          "useTabs": false,
+          "arrowParens": "avoid",
+          "endOfLine": "lf"
+      }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
