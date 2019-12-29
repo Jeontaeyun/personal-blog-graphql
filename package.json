@@ -8,9 +8,9 @@
         "graphql",
         "express"
     ],
-    "main": "index.js",
+    "main": "src/index.js",
     "scripts": {
-        "dev": "nodemon",
+        "start": "nodemon",
         "fix:tslint": "tslint --project tsconfig.json --fix ",
         "fix:prettier": "prettier --write \"src/**/*.{ts,js]\"",
         "fix": "yarn fix:prettier &s yarn fix:tslint",

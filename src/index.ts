@@ -16,8 +16,6 @@ import passportConfig from "./passport";
 import dotenv from "dotenv";
 import morgan from "morgan";
 
-import https from "https";
-import http from "http";
 // Express App Init
 const app = Express();
 dotenv.config();
@@ -49,17 +47,26 @@ const apollo = new ApolloServer({
 
 // Express Environment Setting
 app.use(morgan("dev"));
-app.use(Express.json());
 // JSON형태의 본문을 처리하는 express 미들웨어
-app.use(Express.urlencoded({ extended: true }));
+app.use(Express.json());
 // FORM을 처리해주는 express 미들웨어
+app.use(Express.urlencoded({ extended: true }));
+/**
+ * CORS SOP(Same-origin-policy) 정책 설정
+ */
 app.use(
     cors({
         origin: true,
         credentials: true,
     }),
 );
+/**
+ * Static 파일을 제공하기 위한 서버
+ */
 app.use("/", Express.static("public"));
+/**
+ * SecretKey를 이용해 세션을 주고 받기 위한 코드
+ */
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
     expressSession({
@@ -73,11 +80,15 @@ app.use(
         name: "sefqfzveeff",
     }),
 );
+
+/**
+ * Passport Configuration
+ */
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Database Init
-db.sequelize.sync();
+//Database Initialize
+db.Sequelize.sync({ force: true });
 
 // Express API
 apollo.applyMiddleware({ app, path: "/graphql" });

@@ -1,14 +1,6 @@
-import { Sequelize, BuildOptions, Model } from "sequelize";
+import { Sequelize } from "sequelize";
 import configuration from "../config";
 import dotenv from "dotenv";
-
-/**
- * *Schema of Database
- */
-export type DataBaseStatic<T> = typeof Model & {
-    new (values?: object, options?: BuildOptions): T;
-    connectAssociate: (db: IDatabaseTable) => void;
-};
 
 export interface IDatabaseTable {
     Category: any;
@@ -46,10 +38,20 @@ const sequelize = new Sequelize(
     },
 );
 
+import Category from "./category";
+import Comment from "./comment";
+import Image from "./image";
+import Post from "./post";
+import Tag from "./tag";
+import User from "./user";
+
 const database: IDatabaseTable = {
-    Membership: Membership(sequelize),
-    PurchaseLog: PurchaseLog(sequelize),
-    Purchase: Purchase(sequelize),
+    Category: Category(sequelize),
+    Comment: Comment(sequelize),
+    Image: Image(sequelize),
+    Post: Post(sequelize),
+    Tag: Tag(sequelize),
+    User: User(sequelize),
 };
 
 Object.keys(database).forEach((modelName, idx: number) => {

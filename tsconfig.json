@@ -1,7 +1,7 @@
 {
-    "compileOnSave": false,
     "compilerOptions": {
-        "target": "ESNext",
+        "outDir": "./dist",
+        "target": "es5",
         "module": "CommonJS",
         "allowJs": true,
         "moduleResolution": "node",
