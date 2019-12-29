@@ -1,7 +1,7 @@
-import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize/types";
-import { IDatabaseTable } from "models";
-import { TableNameEnum } from "interface/common/Table";
-import { IPost } from "interface/common/Post";
+import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
+import { IDatabaseTable } from ".";
+import { TableNameEnum } from "@interface/common/Table";
+import { IPost } from "@interface/common/Post";
 
 export type PostStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): IPost;

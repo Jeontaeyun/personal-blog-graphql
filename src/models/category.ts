@@ -1,7 +1,7 @@
 import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
-import { IDatabaseTable } from "models";
-import { ICategory } from "interface/common/Category";
-import { TableNameEnum } from "interface/common/Table";
+import { IDatabaseTable } from ".";
+import { ICategory } from "@interface/common/Category";
+import { TableNameEnum } from "@interface/common/Table";
 
 export type CategoryStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): ICategory;

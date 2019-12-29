@@ -1,7 +1,7 @@
-import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize/types";
-import { IDatabaseTable } from "models";
-import { TableNameEnum } from "interface/common/Table";
-import { IImage } from "interface/common/Image";
+import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
+import { IDatabaseTable } from ".";
+import { TableNameEnum } from "@interface/common/Table";
+import { IImage } from "@interface/common/Image";
 
 export type ImageStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): IImage;

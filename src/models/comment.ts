@@ -1,7 +1,7 @@
-import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize/types";
-import { IDatabaseTable } from "models";
-import { TableNameEnum } from "interface/common/Table";
-import { IComment } from "interface/common/Comment";
+import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
+import { IDatabaseTable } from ".";
+import { TableNameEnum } from "@interface/common/Table";
+import { IComment } from "@interface/common/Comment";
 
 export type CommentStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): IComment;

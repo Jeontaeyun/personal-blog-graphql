@@ -1,7 +1,7 @@
-import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize/types";
-import { IDatabaseTable } from "models";
-import { TableNameEnum } from "interface/common/Table";
-import { ITag } from "interface/common/Tag";
+import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
+import { IDatabaseTable } from ".";
+import { TableNameEnum } from "@interface/common/Table";
+import { ITag } from "@interface/common/Tag";
 
 export type TagStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): ITag;
