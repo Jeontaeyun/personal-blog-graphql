@@ -23,9 +23,9 @@ const env = process.env.NODE_ENV as envType;
 const envConfiguration = configuration[env];
 
 const sequelize = new Sequelize(
-    envConfiguration.database,
-    envConfiguration.username,
-    envConfiguration.password,
+    envConfiguration.database as string,
+    envConfiguration.username as string,
+    envConfiguration.password as string,
     {
         host: envConfiguration.host,
         dialect: envConfiguration.dialect as dbType,

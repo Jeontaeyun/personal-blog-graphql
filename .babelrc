@@ -1,27 +1,27 @@
 {
     "presets": [
         [
-            "@babel/env",
+            "@babel/preset-env",
             {
                 "targets": {
                     "node": "current"
                 }
             }
         ],
-        "@babel/typescript"
+        "@babel/preset-typescript"
     ],
     "plugins": [
         [
             "module-resolver",
             {
-                "extensions": [".ts"],
                 "root": ["."],
                 "alias": {
-                    "@interface/*": "./src/interface/*",
-                    "@router/*": "./src/router/*"
+                    "@interface": "./src/interface",
+                    "@router": "./src/router"
                 }
             }
-        ]
+        ],
+        ["@babel/plugin-transform-typescript"]
     ],
     "comments": false,
     "ignore": ["./src/test"]

@@ -58,8 +58,8 @@ module.exports = `
         createComment(post_id: ID! description: String!) : Comment!
         updateComment(comment_id: ID!, description: String!): [Int]!
         deleteComment(comment_id: ID!) : Int!
-
-        createReComment(post_id: ID!, comment_id: ID!, description: String!): Comment!
+        
+        createRecomment(post_id: ID!, comment_id: ID!, description: String!): Comment!
 
         createLiked(post_id: ID!) : Int!
         deleteLiked(post_id: ID!) : Int!

@@ -2,16 +2,14 @@ import Express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
-import fs from "fs";
 
 import { ApolloServer } from "apollo-server-express";
 import graphqlConfig from "./graphql";
 import { jwtSign, jwtVerify } from "./graphql/authentication";
 
-import db from "./models";
+import database from "./models";
 
 import passport from "passport";
-import passportConfig from "./passport";
 
 import dotenv from "dotenv";
 import morgan from "morgan";
@@ -39,9 +37,9 @@ const apollo = new ApolloServer({
         }
         if (!user) {
             console.log("유저가 존재하지 않습니다.");
-            return { db, req };
+            return { database, req };
         }
-        return { db, user, req };
+        return { database, user, req };
     },
 });
 
@@ -72,7 +70,7 @@ app.use(
     expressSession({
         resave: false,
         saveUninitialized: false,
-        secret: process.env.COOKIE_SECRET,
+        secret: process.env.COOKIE_SECRET as string,
         cookie: {
             httpOnly: true,
             secure: false,
@@ -88,7 +86,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Database Initialize
-db.Sequelize.sync({ force: true });
+if (database.Sequelize) {
+    database.Sequelize.sync({ force: true });
+}
 
 // Express API
 apollo.applyMiddleware({ app, path: "/graphql" });
