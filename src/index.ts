@@ -86,9 +86,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Database Initialize
-if (database.Sequelize) {
-    database.Sequelize.sync({ force: true });
-}
+database.Sequelize!.sync({ force: true });
 
 // Express API
 apollo.applyMiddleware({ app, path: "/graphql" });

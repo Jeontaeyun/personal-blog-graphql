@@ -3,12 +3,12 @@ import configuration from "../config";
 import dotenv from "dotenv";
 
 export interface IDatabaseTable {
-    Category: any;
-    Comment: any;
-    Image: any;
-    Post: any;
-    Tag: any;
-    User: any;
+    Category: CategoryStatic;
+    Comment: CommentStatic;
+    Image: ImageStatic;
+    Post: PostStatic;
+    Tag: TagStatic;
+    User: UserStatic;
     Sequelize?: Sequelize;
 }
 type envType = "development" | "production";
@@ -29,7 +29,7 @@ const sequelize = new Sequelize(
     {
         host: envConfiguration.host,
         dialect: envConfiguration.dialect as dbType,
-        logging: false,
+        logging: true,
         retry: {
             // ! DB 호출 재설정 횟수를 제한할 수 있다.
             max: 10,
@@ -38,12 +38,12 @@ const sequelize = new Sequelize(
     },
 );
 
-import Category from "./category";
-import Comment from "./comment";
-import Image from "./image";
-import Post from "./post";
-import Tag from "./tag";
-import User from "./user";
+import Category, { CategoryStatic } from "./category";
+import Comment, { CommentStatic } from "./comment";
+import Image, { ImageStatic } from "./image";
+import Post, { PostStatic } from "./post";
+import Tag, { TagStatic } from "./tag";
+import User, { UserStatic } from "./user";
 
 const database: IDatabaseTable = {
     Category: Category(sequelize),

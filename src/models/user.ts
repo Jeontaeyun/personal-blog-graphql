@@ -1,15 +1,15 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
 import { IDatabaseTable } from ".";
 import { TableNameEnum } from "@interface/common/Table";
-import { ITag } from "@interface/common/Tag";
+import { IUser } from "@interface/common/User";
 
-export type TagStatic = typeof Model & {
-    new (values?: object, options?: BuildOptions): ITag;
+export type UserStatic = typeof Model & {
+    new (values?: object, options?: BuildOptions): IUser;
     connectAssociate: (db: IDatabaseTable) => void;
 };
 
 export default (sequelize: Sequelize) => {
-    const User: TagStatic = <TagStatic>sequelize.define(
+    const User: UserStatic = <UserStatic>sequelize.define(
         TableNameEnum.TAG,
         {
             id: {
