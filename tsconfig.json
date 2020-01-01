@@ -1,0 +1,23 @@
+{
+    "compilerOptions": {
+        "rootDir": "./src",
+        "outDir": "./build",
+        "sourceMap": true,
+        "target": "es6",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "allowJs": true,
+        "noImplicitReturns": true,
+        "resolveJsonModule": true,
+        "removeComments": true,
+        "strict": true,
+        "baseUrl": "./src",
+        "paths": {
+            "@interface/*": ["./interface/*"],
+            "@router/*": ["./router/*"]
+        }
+    },
+    "compileOnSave": true,
+    "include": ["src"]
+}

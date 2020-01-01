@@ -1,0 +1,28 @@
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "targets": {
+                    "node": "current"
+                }
+            }
+        ],
+        "@babel/preset-typescript"
+    ],
+    "plugins": [
+        [
+            "module-resolver",
+            {
+                "root": ["."],
+                "alias": {
+                    "@interface": "./src/interface",
+                    "@router": "./src/router"
+                }
+            }
+        ],
+        ["@babel/plugin-transform-typescript"]
+    ],
+    "comments": false,
+    "ignore": ["./src/test"]
+}
