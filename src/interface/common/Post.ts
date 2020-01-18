@@ -3,8 +3,10 @@
  */
 export interface IPost {
     id?: string;
-    user_id: string;
-
     title: string;
     description: string;
+    userId: string;
+    categoryId: string;
+    createdAt?: number;
+    updatedAy?: number;
 }

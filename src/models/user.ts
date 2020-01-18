@@ -1,7 +1,7 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
 import { IDatabaseTable } from ".";
 import { TABLE_NAME } from "@interface/common/Table";
-import { IUser } from "@interface/common/User";
+import { IUser, USER_GRANT_ENUM } from "@interface/common/User";
 
 export type UserStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): IUser;
@@ -32,8 +32,9 @@ export default (sequelize: Sequelize) => {
                 allowNull: false
             },
             grant: {
-                type: DataTypes.INTEGER,
-                allowNull: true
+                type: DataTypes.ENUM,
+                values: Object.values(USER_GRANT_ENUM),
+                allowNull: false
             }
         },
         {

@@ -32,7 +32,7 @@ export default (sequelize: Sequelize) => {
     Comment.connectAssociate = (database: IDatabaseTable) => {
         database.Comment.belongsTo(database.User);
         database.Comment.belongsTo(database.Post);
-        database.Comment.belongsTo(database.Comment, { as: "Recommnet" });
+        database.Comment.belongsTo(database.Comment, { as: "recommnet" });
     };
     return Comment;
 };

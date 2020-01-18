@@ -1,4 +1,4 @@
-module.exports = `
+export default `
     type User {
         id: ID!
         userId: String!

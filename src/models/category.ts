@@ -28,8 +28,6 @@ export default (sequelize: Sequelize) => {
         },
         {
             tableName: TABLE_NAME.CATEGORY,
-            createdAt: "created",
-            updatedAt: "updated_at",
             charset: "utf8",
             collate: "utf8_general_ci"
         }
