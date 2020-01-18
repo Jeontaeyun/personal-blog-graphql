@@ -32,10 +32,10 @@ const sequelize = new Sequelize(
         logging: true,
         retry: {
             // ! DB 호출 재설정 횟수를 제한할 수 있다.
-            max: 10,
+            max: 10
         },
-        timezone: "+09:00", //"Asia/Seoul";
-    },
+        timezone: "+09:00" //"Asia/Seoul";
+    }
 );
 
 import Category, { CategoryStatic } from "./category";
@@ -46,12 +46,12 @@ import Tag, { TagStatic } from "./tag";
 import User, { UserStatic } from "./user";
 
 const database: IDatabaseTable = {
+    User: User(sequelize),
     Category: Category(sequelize),
     Comment: Comment(sequelize),
     Image: Image(sequelize),
     Post: Post(sequelize),
-    Tag: Tag(sequelize),
-    User: User(sequelize),
+    Tag: Tag(sequelize)
 };
 
 Object.keys(database).forEach((modelName, idx: number) => {

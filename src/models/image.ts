@@ -1,6 +1,6 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
 import { IDatabaseTable } from ".";
-import { TableNameEnum } from "@interface/common/Table";
+import { TABLE_NAME } from "@interface/common/Table";
 import { IImage } from "@interface/common/Image";
 
 export type ImageStatic = typeof Model & {
@@ -10,25 +10,24 @@ export type ImageStatic = typeof Model & {
 
 export default (sequelize: Sequelize) => {
     const Image: ImageStatic = <ImageStatic>sequelize.define(
-        TableNameEnum.IMAGE,
+        TABLE_NAME.IMAGE,
         {
             id: {
                 primaryKey: true,
                 allowNull: false,
                 type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: DataTypes.UUIDV4
             },
             src: {
                 type: DataTypes.STRING(200),
-                allowNull: false,
-            },
+                allowNull: false
+            }
         },
         {
-            tableName: TableNameEnum.IMAGE,
-            underscored: true,
+            tableName: TABLE_NAME.IMAGE,
             charset: "utf8",
-            collate: "utf8_general_ci",
-        },
+            collate: "utf8_general_ci"
+        }
     );
     Image.connectAssociate = (database: IDatabaseTable) => {
         database.Image.belongsTo(database.Post);

@@ -1,6 +1,6 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
 import { IDatabaseTable } from ".";
-import { TableNameEnum } from "@interface/common/Table";
+import { TABLE_NAME } from "@interface/common/Table";
 import { IPost } from "@interface/common/Post";
 
 export type PostStatic = typeof Model & {
@@ -10,29 +10,28 @@ export type PostStatic = typeof Model & {
 
 export default (sequelize: Sequelize) => {
     const Post: PostStatic = <PostStatic>sequelize.define(
-        TableNameEnum.POST,
+        TABLE_NAME.POST,
         {
             id: {
                 primaryKey: true,
                 allowNull: false,
                 type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: DataTypes.UUIDV4
             },
             title: {
                 type: DataTypes.STRING(20),
-                allowNull: false,
+                allowNull: false
             },
             description: {
                 type: DataTypes.TEXT,
-                allowNull: false,
-            },
+                allowNull: false
+            }
         },
         {
-            tableName: TableNameEnum.POST,
-            underscored: true,
+            tableName: TABLE_NAME.POST,
             charset: "utf8",
-            collate: "utf8_general_ci",
-        },
+            collate: "utf8_general_ci"
+        }
     );
     Post.connectAssociate = (database: IDatabaseTable) => {
         database.Post.belongsTo(database.User);

@@ -74,10 +74,10 @@
         "typescript": "^3.7.4"
     },
     "prettier": {
-        "printWidth": 100,
+        "printWidth": 120,
         "tabWidth": 4,
         "singleQuote": false,
-        "trailingComma": "all",
+        "trailingComma": "none",
         "bracketSpacing": true,
         "semi": true,
         "useTabs": false,

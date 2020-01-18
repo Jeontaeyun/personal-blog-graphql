@@ -1,7 +1,7 @@
 import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 import { IDatabaseTable } from ".";
 import { ICategory } from "@interface/common/Category";
-import { TableNameEnum } from "@interface/common/Table";
+import { TABLE_NAME } from "@interface/common/Table";
 
 export type CategoryStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): ICategory;
@@ -10,7 +10,7 @@ export type CategoryStatic = typeof Model & {
 
 export default (sequelize: Sequelize) => {
     const Category: CategoryStatic = <CategoryStatic>sequelize.define(
-        TableNameEnum.CATEGORY,
+        TABLE_NAME.CATEGORY,
 
         {
             /**
@@ -19,21 +19,20 @@ export default (sequelize: Sequelize) => {
             id: {
                 primaryKey: true,
                 type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: DataTypes.UUIDV4
             },
             name: {
                 type: DataTypes.STRING(20),
-                allowNull: false,
-            },
+                allowNull: false
+            }
         },
         {
-            tableName: TableNameEnum.CATEGORY,
-            underscored: true,
+            tableName: TABLE_NAME.CATEGORY,
             createdAt: "created",
             updatedAt: "updated_at",
             charset: "utf8",
-            collate: "utf8_general_ci",
-        },
+            collate: "utf8_general_ci"
+        }
     );
 
     Category.connectAssociate = database => {

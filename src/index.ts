@@ -25,8 +25,8 @@ const apollo = new ApolloServer({
     ...graphqlConfig,
     playground: {
         settings: {
-            "request.credentials": "include",
-        },
+            "request.credentials": "include"
+        }
     },
     // Context object is one that gets passed to every single resolvers
     // at every level.
@@ -40,7 +40,7 @@ const apollo = new ApolloServer({
             return { database, req };
         }
         return { database, user, req };
-    },
+    }
 });
 
 // Express Environment Setting
@@ -55,8 +55,8 @@ app.use(Express.urlencoded({ extended: true }));
 app.use(
     cors({
         origin: true,
-        credentials: true,
-    }),
+        credentials: true
+    })
 );
 /**
  * Static 파일을 제공하기 위한 서버
@@ -73,10 +73,10 @@ app.use(
         secret: process.env.COOKIE_SECRET as string,
         cookie: {
             httpOnly: true,
-            secure: false,
+            secure: false
         },
-        name: "sefqfzveeff",
-    }),
+        name: "sefqfzveeff"
+    })
 );
 
 /**
@@ -86,12 +86,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 //Database Initialize
-database.Sequelize!.sync({ force: true });
+database.Sequelize!.sync().then(() => {
+    // Express API
+    apollo.applyMiddleware({ app, path: "/graphql" });
 
-// Express API
-apollo.applyMiddleware({ app, path: "/graphql" });
-
-//Starting Express App
-app.listen({ port: 8080 }, () => {
-    console.log(`Apollo Server ready at http${apollo.graphqlPath}`);
+    //Starting Express App
+    app.listen({ port: 8080 }, () => {
+        console.log(`Apollo Server ready at http${apollo.graphqlPath}`);
+    });
 });

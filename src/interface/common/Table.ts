@@ -1,8 +1,8 @@
-export enum TableNameEnum {
-    CATEGORY = "CATEGORY",
-    COMMENT = "COMMENT",
-    IMAGE = "IMAGE",
-    POST = "POST",
-    TAG = "TAG",
-    USER = "USER",
-}
+export const TABLE_NAME = {
+    CATEGORY: "CATEGORYS",
+    COMMENT: "COMMENTS",
+    IMAGE: "IMAGES",
+    POST: "POSTS",
+    TAG: "TAGS",
+    USER: "USERS"
+};

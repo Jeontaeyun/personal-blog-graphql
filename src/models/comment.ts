@@ -1,6 +1,6 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
 import { IDatabaseTable } from ".";
-import { TableNameEnum } from "@interface/common/Table";
+import { TABLE_NAME } from "@interface/common/Table";
 import { IComment } from "@interface/common/Comment";
 
 export type CommentStatic = typeof Model & {
@@ -10,25 +10,24 @@ export type CommentStatic = typeof Model & {
 
 export default (sequelize: Sequelize) => {
     const Comment: CommentStatic = <CommentStatic>sequelize.define(
-        TableNameEnum.COMMENT,
+        TABLE_NAME.COMMENT,
         {
             id: {
                 primaryKey: true,
                 allowNull: false,
                 type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: DataTypes.UUIDV4
             },
             description: {
                 type: DataTypes.TEXT,
-                allowNull: false,
-            },
+                allowNull: false
+            }
         },
         {
-            tableName: TableNameEnum.COMMENT,
-            underscored: true,
+            tableName: TABLE_NAME.COMMENT,
             charset: "utf8",
-            collate: "utf8_general_ci",
-        },
+            collate: "utf8_general_ci"
+        }
     );
     Comment.connectAssociate = (database: IDatabaseTable) => {
         database.Comment.belongsTo(database.User);

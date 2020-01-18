@@ -1,6 +1,6 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
 import { IDatabaseTable } from ".";
-import { TableNameEnum } from "@interface/common/Table";
+import { TABLE_NAME } from "@interface/common/Table";
 import { ITag } from "@interface/common/Tag";
 
 export type TagStatic = typeof Model & {
@@ -10,25 +10,24 @@ export type TagStatic = typeof Model & {
 
 export default (sequelize: Sequelize) => {
     const Tag: TagStatic = <TagStatic>sequelize.define(
-        TableNameEnum.TAG,
+        TABLE_NAME.TAG,
         {
             id: {
                 primaryKey: true,
                 allowNull: false,
                 type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: DataTypes.UUIDV4
             },
             name: {
                 type: DataTypes.STRING(20),
-                allowNull: false,
-            },
+                allowNull: false
+            }
         },
         {
-            tableName: TableNameEnum.TAG,
-            underscored: true,
+            tableName: TABLE_NAME.TAG,
             charset: "utf8",
-            collate: "utf8_general_ci",
-        },
+            collate: "utf8_general_ci"
+        }
     );
     Tag.connectAssociate = (database: IDatabaseTable) => {
         database.Tag.belongsToMany(database.Post, { through: "PostTag" });
