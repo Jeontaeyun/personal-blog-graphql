@@ -1,5 +1,5 @@
 {
     "watch": ["./src"],
-    "exec": "babel-node --extensions \".ts\" ./src/index.ts",
+    "exec": "babel-node --extensions \".ts\" ./src/app.ts",
     "ext": "js json ts"
 }

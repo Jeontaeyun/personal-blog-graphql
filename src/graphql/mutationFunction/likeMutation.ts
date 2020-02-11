@@ -1,4 +1,4 @@
-import { ResolverContextType } from "@interface/common/User";
+import { ResolverContextType } from "types/common/User";
 
 const createLiked = async (_: any, { post_id }: { post_id: string }, { db, user }: ResolverContextType, info: any) => {
     if (!user) return new Error("로그인이 필요합니다.");

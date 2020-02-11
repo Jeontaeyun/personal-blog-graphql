@@ -1,4 +1,4 @@
-import { ResolverContextType } from "@interface/common/User";
+import { ResolverContextType } from "types/common/User";
 
 const createComment = async (
     _: any,
@@ -19,7 +19,7 @@ const createComment = async (
         });
         await post.addComment(newComment.get("id"));
         const comment = await db.Comment.findOne({
-            where: { id: newComment.get("id") as string },
+            where: { id: newComment.get("id") },
             include: [
                 {
                     model: db.User,

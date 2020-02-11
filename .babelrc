@@ -14,10 +14,10 @@
         [
             "module-resolver",
             {
-                "root": ["."],
+                "root": ["./src"],
                 "alias": {
-                    "@interface": "./src/interface",
-                    "@router": "./src/router"
+                    "@types": "./types",
+                    "@api": "./api"
                 }
             }
         ],

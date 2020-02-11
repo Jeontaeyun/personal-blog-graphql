@@ -2,7 +2,7 @@ import { Sequelize } from "sequelize";
 import configuration from "../config";
 import dotenv from "dotenv";
 
-export interface IDatabaseTable {
+export interface IDatabase {
     Category: CategoryStatic;
     Comment: CommentStatic;
     Image: ImageStatic;
@@ -13,7 +13,7 @@ export interface IDatabaseTable {
 }
 type envType = "development" | "production";
 type dbType = "mysql" | "mariadb" | "postgres" | "sqlite" | "mssql";
-type DatabaseTableKey = keyof IDatabaseTable;
+type DatabaseTableKey = keyof IDatabase;
 
 /**
  * * Setting Database Config
@@ -45,7 +45,7 @@ import Post, { PostStatic } from "./post";
 import Tag, { TagStatic } from "./tag";
 import User, { UserStatic } from "./user";
 
-const database: IDatabaseTable = {
+const database: IDatabase = {
     User: User(sequelize),
     Category: Category(sequelize),
     Comment: Comment(sequelize),

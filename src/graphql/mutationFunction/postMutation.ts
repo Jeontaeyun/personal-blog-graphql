@@ -1,6 +1,6 @@
-import { IPost } from "@interface/common/Post";
+import { IPost } from "types/common/Post";
 import { IDatabaseTable } from "models";
-import { USER_GRANT_ENUM, ResolverContextType } from "@interface/common/User";
+import { USER_GRANT_ENUM, ResolverContextType } from "types/common/User";
 
 const { AuthenticationError } = require("apollo-server-express");
 

@@ -1,11 +1,15 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
-import { IDatabaseTable } from ".";
-import { TABLE_NAME } from "@interface/common/Table";
-import { IComment } from "@interface/common/Comment";
+import { IDatabase } from ".";
+import { TABLE_NAME } from "types/common/Table";
+
+export interface ICommentModel extends Model {
+    readonly id: string;
+    readonly description: string;
+}
 
 export type CommentStatic = typeof Model & {
-    new (values?: object, options?: BuildOptions): IComment;
-    connectAssociate: (db: IDatabaseTable) => void;
+    new (values?: object, options?: BuildOptions): ICommentModel;
+    connectAssociate: (db: IDatabase) => void;
 };
 
 export default (sequelize: Sequelize) => {
@@ -29,7 +33,7 @@ export default (sequelize: Sequelize) => {
             collate: "utf8_general_ci"
         }
     );
-    Comment.connectAssociate = (database: IDatabaseTable) => {
+    Comment.connectAssociate = (database: IDatabase) => {
         database.Comment.belongsTo(database.User);
         database.Comment.belongsTo(database.Post);
         database.Comment.belongsTo(database.Comment, { as: "recommnet" });

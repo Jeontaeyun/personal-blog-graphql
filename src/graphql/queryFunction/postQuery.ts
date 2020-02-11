@@ -1,4 +1,4 @@
-import { ResolverContextType } from "@interface/common/User";
+import { ResolverContextType } from "types/common/User";
 
 const paginate = ({ page, pageSize }: { page: number; pageSize: number }) => {
     const offset = page * pageSize;

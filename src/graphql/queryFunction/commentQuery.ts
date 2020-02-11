@@ -1,4 +1,4 @@
-import { ResolverContextType } from "@interface/common/User";
+import { ResolverContextType } from "types/common/User";
 
 const comments = async (_: any, { post_id }: { post_id: string }, { db }: ResolverContextType, info: any) => {
     try {

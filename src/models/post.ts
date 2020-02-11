@@ -1,11 +1,18 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
-import { IDatabaseTable } from ".";
-import { TABLE_NAME } from "@interface/common/Table";
-import { IPost } from "@interface/common/Post";
+import { IDatabase } from ".";
+import { TABLE_NAME } from "types/common/Table";
+
+export interface IPostModel extends Model {
+    readonly id: string;
+    readonly title: string;
+    readonly description: string;
+}
 
 export type PostStatic = typeof Model & {
-    new (values?: object, options?: BuildOptions): IPost;
-    connectAssociate: (db: IDatabaseTable) => void;
+    new (values?: object, options?: BuildOptions): IPostModel;
+    connectAssociate: (db: IDatabase) => void;
+    addComment: (string: string) => Promise<any>;
+    removeComment: (string: string) => Promise<any>;
 };
 
 export default (sequelize: Sequelize) => {
@@ -33,7 +40,7 @@ export default (sequelize: Sequelize) => {
             collate: "utf8_general_ci"
         }
     );
-    Post.connectAssociate = (database: IDatabaseTable) => {
+    Post.connectAssociate = (database: IDatabase) => {
         database.Post.belongsTo(database.User);
         database.Post.belongsTo(database.Category);
         database.Post.hasMany(database.Comment);

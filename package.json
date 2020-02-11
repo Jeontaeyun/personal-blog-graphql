@@ -8,7 +8,7 @@
         "graphql",
         "express"
     ],
-    "main": "src/index.ts",
+    "main": "src/app.ts",
     "scripts": {
         "start": "nodemon",
         "build": "babel src --out-dir dist --copy-files --extensions .ts,.js",

@@ -5,12 +5,12 @@ dotenv.config();
 exports.jwtSign = email => {
     const token = jwt.sign({ email }, process.env.JWT_SECRET, {
         expiresIn: "1h",
-        issuer: "connectDot",
+        issuer: "connectDot"
     });
     return {
         code: 200,
         message: "토큰이 발급되었습니다.",
-        token,
+        token
     };
 };
 
@@ -21,7 +21,7 @@ exports.jwtVerify = (req, token) => {
     } catch (e) {
         return {
             code: 401,
-            message: "유효하지 않은 토큰입니다.",
+            message: "유효하지 않은 토큰입니다."
         };
     }
 };

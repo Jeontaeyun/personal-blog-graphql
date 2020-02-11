@@ -1,11 +1,15 @@
 import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
-import { IDatabaseTable } from ".";
-import { ICategory } from "@interface/common/Category";
-import { TABLE_NAME } from "@interface/common/Table";
+import { IDatabase } from ".";
+import { TABLE_NAME } from "types/common/Table";
+
+export interface ICategoryModel extends Model {
+    readonly id: string;
+    readonly name: string;
+}
 
 export type CategoryStatic = typeof Model & {
-    new (values?: object, options?: BuildOptions): ICategory;
-    connectAssociate: (db: IDatabaseTable) => void;
+    new (values?: object, options?: BuildOptions): ICategoryModel;
+    connectAssociate: (db: IDatabase) => void;
 };
 
 export default (sequelize: Sequelize) => {
@@ -13,9 +17,6 @@ export default (sequelize: Sequelize) => {
         TABLE_NAME.CATEGORY,
 
         {
-            /**
-             * *Sequelize ID 항목을 UUID(범용 고유 식별자)로 생성하는 방법
-             */
             id: {
                 primaryKey: true,
                 type: DataTypes.UUID,
@@ -33,7 +34,7 @@ export default (sequelize: Sequelize) => {
         }
     );
 
-    Category.connectAssociate = database => {
+    Category.connectAssociate = (database: IDatabase) => {
         database.Category.hasMany(database.Post);
     };
     return Category;

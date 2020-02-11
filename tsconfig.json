@@ -14,8 +14,8 @@
         "strict": true,
         "baseUrl": "./src",
         "paths": {
-            "@interface/*": ["./interface/*"],
-            "@router/*": ["./router/*"]
+            "@types/*": ["./types/*"],
+            "@api/*": ["./api/*"]
         }
     },
     "compileOnSave": true,

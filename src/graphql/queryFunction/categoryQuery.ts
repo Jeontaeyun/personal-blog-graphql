@@ -1,4 +1,4 @@
-import { ResolverContextType } from "@interface/common/User";
+import { ResolverContextType } from "types/common/User";
 
 const categorys = async (_: any, args: any, { db }: ResolverContextType, info: any) => {
     try {

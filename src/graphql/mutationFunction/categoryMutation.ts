@@ -1,4 +1,4 @@
-import { USER_GRANT_ENUM, ResolverContextType } from "@interface/common/User";
+import { USER_GRANT_ENUM, ResolverContextType } from "types/common/User";
 import { AuthenticationError } from "apollo-server";
 
 const createCategory = async (

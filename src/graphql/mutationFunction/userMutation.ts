@@ -1,10 +1,10 @@
-import { IUser, USER_GRANT_ENUM, ResolverContextType } from "@interface/common/User";
+import { IUser, USER_GRANT_ENUM, ResolverContextType } from "types/common/User";
 
 import { UserInputError } from "apollo-server-express";
 //@ts-ignore
 import bcrypt from "bcrypt-nodejs";
 import passport from "passport";
-import passportConfig from "../../passport";
+import passportConfig from "../../services/passport";
 
 passportConfig();
 

@@ -12,7 +12,7 @@ import userMutation from "./mutationFunction/userMutation";
 import commentMutation from "./mutationFunction/commentMutation";
 import categoryMutation from "./mutationFunction/categoryMutation";
 import likeMutation from "./mutationFunction/likeMutation";
-import { ResolverContextType } from "@interface/common/User";
+import { ResolverContextType } from "types/common/User";
 
 export default {
     Query: {
