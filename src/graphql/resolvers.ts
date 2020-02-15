@@ -1,18 +1,18 @@
 /**
  * * Query
  */
-import postQuery from "./queryFunction/postQuery";
-import categoryQuery from "./queryFunction/categoryQuery";
+import postQuery from "./query/postQuery";
+import categoryQuery from "./query/categoryQuery";
 
 /**
  * * Mutation
  */
-import postMutation from "./mutationFunction/postMutation";
-import userMutation from "./mutationFunction/userMutation";
-import commentMutation from "./mutationFunction/commentMutation";
-import categoryMutation from "./mutationFunction/categoryMutation";
-import likeMutation from "./mutationFunction/likeMutation";
-import { ResolverContextType } from "types/common/User";
+import postMutation from "./mutation/postMutation";
+import userMutation from "./mutation/user";
+import commentMutation from "./mutation/commentMutation";
+import categoryMutation from "./mutation/categoryMutation";
+import likeMutation from "./mutation/likeMutation";
+import { ResolverContextType } from "types/services/User";
 
 export default {
     Query: {
@@ -21,10 +21,10 @@ export default {
         user: async (
             _: any,
             { userId }: { userId: string },
-            { db, req }: Pick<ResolverContextType, "db" | "req">,
+            { database, req }: Pick<ResolverContextType, "database" | "req">,
             info: any
         ) => {
-            return await db.User.findOne({ where: { userId } });
+            return await database.User.findOne({ where: { userId } });
         }
     },
     Mutation: {

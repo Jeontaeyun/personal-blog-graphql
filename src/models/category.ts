@@ -1,6 +1,6 @@
 import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
 import { IDatabase } from ".";
-import { TABLE_NAME } from "types/common/Table";
+import { TABLE_NAME } from "types/services/Table";
 
 export interface ICategoryModel extends Model {
     readonly id: string;
@@ -29,6 +29,7 @@ export default (sequelize: Sequelize) => {
         },
         {
             tableName: TABLE_NAME.CATEGORY,
+            paranoid: true,
             charset: "utf8",
             collate: "utf8_general_ci"
         }

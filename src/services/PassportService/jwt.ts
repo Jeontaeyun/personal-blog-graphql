@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 dotenv.config();
 
-exports.jwtSign = email => {
+const jwtSign = (email: any) => {
     const token = jwt.sign({ email }, process.env.JWT_SECRET, {
         expiresIn: "1h",
         issuer: "connectDot"
@@ -13,8 +13,7 @@ exports.jwtSign = email => {
         token
     };
 };
-
-exports.jwtVerify = (req, token) => {
+const jwtVerify = (req: any, token: any) => {
     try {
         req.decoded = jwt.verify(token, process.env.JWT_SECRET);
         return;
@@ -24,4 +23,9 @@ exports.jwtVerify = (req, token) => {
             message: "유효하지 않은 토큰입니다."
         };
     }
+};
+
+export default {
+    jwtSign,
+    jwtVerify
 };

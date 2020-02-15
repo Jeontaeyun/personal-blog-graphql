@@ -1,8 +1,7 @@
 import resolvers from "./resolvers";
-import schema from "./schema";
-import { gql } from "apollo-server-express";
+import { importSchema } from "graphql-import";
 
-export default {
-    resolvers,
-    typeDefs: gql(schema)
+export default async () => {
+    const typeDefs = await importSchema("src/graphql/schemas/schema.graphql", {});
+    return { resolvers, typeDefs };
 };

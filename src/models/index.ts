@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
-import configuration from "../config";
 import dotenv from "dotenv";
+import sequelizeConfig from "config/sequelizeConfig";
 
 export interface IDatabase {
     Category: CategoryStatic;
@@ -20,7 +20,7 @@ type DatabaseTableKey = keyof IDatabase;
  */
 dotenv.config();
 const env = process.env.NODE_ENV as envType;
-const envConfiguration = configuration[env];
+const envConfiguration = sequelizeConfig[env];
 
 const sequelize = new Sequelize(
     envConfiguration.database as string,
@@ -29,9 +29,8 @@ const sequelize = new Sequelize(
     {
         host: envConfiguration.host,
         dialect: envConfiguration.dialect as dbType,
-        logging: true,
         retry: {
-            // ! DB 호출 재설정 횟수를 제한할 수 있다.
+            // ! Database Call limit
             max: 10
         },
         timezone: "+09:00" //"Asia/Seoul";

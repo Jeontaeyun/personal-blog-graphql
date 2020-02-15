@@ -1,12 +1,9 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
 import { IDatabase } from ".";
-import { TABLE_NAME } from "types/common/Table";
+import { TABLE_NAME } from "types/services/Table";
+import { IPost } from "types/services/Post";
 
-export interface IPostModel extends Model {
-    readonly id: string;
-    readonly title: string;
-    readonly description: string;
-}
+export interface IPostModel extends Model, IPost {}
 
 export type PostStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): IPostModel;
@@ -36,6 +33,7 @@ export default (sequelize: Sequelize) => {
         },
         {
             tableName: TABLE_NAME.POST,
+            paranoid: true,
             charset: "utf8",
             collate: "utf8_general_ci"
         }

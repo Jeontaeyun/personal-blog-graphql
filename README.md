@@ -389,3 +389,39 @@ it('유저를 생성하는 테스트', async () => {
 | 단점 | - 테스트 코드를 작성하기 위해 소모되는 시간이 많다.(생산성 하락)</br> - 테스트 코드를 테스트 하기 위한 복잡한 과정이 생긴다.                                                  |
 
 이를 통해 테스트의 필요성을 느꼈지만, 상황에 따라 테스트를 도입할 지 말지에 대한 생각을 하게되었다.
+
+### 03. GraphQL Codegen
+
+[GraphQL Codegen]("https://graphql-code-generator.com/") is the paser which is translate between schema.graphql and native language. We can get some types for tpyescript to use graphql-codegen.
+
+```bash
+$yarn add -D @graphql-codegen/cli
+$yarn add -D @graphql-codegen/typescript
+```
+
+And we need to write some script code like this.
+
+```json
+{
+    "scripts": {
+        "codegen:start": "graphql-codegen graphql-codegen --config codegen.yml",
+        "codegen:init": "graphql-codegen init"
+    }
+}
+```
+
+Also, we need configuration for graphql-codegne `codegen.yml`
+
+```YAML
+overwrite: true
+schema: "./graphql/schema/schema.graphql"
+documents: null
+generates:
+    src/types/graphql.ts:
+       config:
+       contextType: ../context                    #MyContext
+       plugins:
+            - "typescript"
+            - "typescript-resolvers"
+
+```

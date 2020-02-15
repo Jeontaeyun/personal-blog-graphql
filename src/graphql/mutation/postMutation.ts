@@ -1,53 +1,22 @@
-import { IPost } from "types/common/Post";
-import { IDatabaseTable } from "models";
-import { USER_GRANT_ENUM, ResolverContextType } from "types/common/User";
+import { IPost, IPostInput } from "types/services/Post";
+import { IDatabase } from "models";
+import { USER_GRANT_ENUM, ResolverContextType } from "types/services/User";
+import { PostService } from "services";
 
-const { AuthenticationError } = require("apollo-server-express");
+import { AuthenticationError } from "apollo-server-express";
 
-const tagAddFunction = async (newPost: any, tag: string, db: IDatabaseTable) => {
-    try {
-        let tagArr;
-        if (tag) {
-            tagArr = tag.match(/#[^\s]+/g);
-        }
-        if (tagArr) {
-            const tagResult = await Promise.all(
-                tagArr.map(async tags => {
-                    return await db.Tag.findOrCreate({
-                        where: { name: tags.slice(1).toLowerCase() }
-                    });
-                })
-            );
-            return await newPost.addTags(tagResult.map(r => r[0]));
-        }
-    } catch (e) {
-        return new Error("태그 추가 에러");
-    }
-};
-
-const tagRemoveFunction = async (post: IPost, db: IDatabaseTable) => {
-    try {
-        return db.Tag.removePost(post.id);
-    } catch (e) {
-        return new Error("태그 삭제 에러");
-    }
-};
-
-const createPost = async (
-    _: any,
-    { title, description, tag, category_id }: { title: string; description: string; tag: string; category_id: string },
-    { db, user }: ResolverContextType,
-    info: any
-) => {
+const createPost = async (_: Parent, args: IPostInput, { database, user }: ResolverContextType, info: any) => {
     if (!user || !(user.grant === USER_GRANT_ENUM.ADMIN)) {
-        return new AuthenticationError("must be ADMIN");
+        throw new AuthenticationError("must be ADMIN");
     }
     try {
+        const postService = new PostService(database.Post);
+        const result = await postService.createPost(args);
         const newPost = await db.Post.create({
             title,
             description,
             UserId: user.id,
-            CategoryId: category_id
+            CategoryId: categoryId
         });
         await tagAddFunction(newPost, tag, db);
         const post = await db.Post.findOne({
