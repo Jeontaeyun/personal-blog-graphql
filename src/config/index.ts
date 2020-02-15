@@ -1,26 +1,11 @@
 import dotenv from "dotenv";
+import sequelizeConfig from "./sequelizeConfig";
 dotenv.config();
+/**
+ * It can helpful to reduce process.env.XXXX
+ */
 
 export default {
-    development: {
-        username: process.env.DB_NAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-        host: "localhost",
-        dialect: "mysql",
-    },
-    test: {
-        username: process.env.DB_NAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-        host: "localhost",
-        dialect: "mysql",
-    },
-    production: {
-        username: process.env.DB_NAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-        host: "localhost",
-        dialect: "mysql",
-    },
+    port: process.env.PORT,
+    sequelizeConfig: { ...sequelizeConfig }
 };

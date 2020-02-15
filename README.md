@@ -1,18 +1,37 @@
-# 타입스크립트 + 넥스트 + 그래프 큐엘을 이용한 퍼스널 브랜딩 블로그
+# Personal Branding Blog Backend with GraphQL
 
-## 프로젝트 목적
+## Goal of Project
 
-2019년 떠오르는 기술인 타입스크립트와 그래프 큐엘을 사용하여 개인 블로그를 만들기 위한 프로젝트입니다. 이를 통해 다음과 같은 목적을 달성할 것입니다.
+I am going to make some blog project with Typescript, GraphQL(Apollo-Client) and Next.js. The purpose of this project is that,
 
-1. 동적 타입 언어인 자바스크립트의 타입 취약성을 보완해주는 타입스크립트 도입
+1. Studying and Using Typescript
 
-2. REST API를 대체하는 GraphQL의 설계 패턴을 익힌 후 프론트 엔드에 적용
+2. Learn GraphQL and Get the gist of difference between GraphQL and REST API.
 
-3. 아키텍쳐 설계 - 프로젝트 환경 설정 - 개발 - 배포의 과정
+3. Get the experience with design -> develope -> deploy
 
-## 그래프 큐엘 설정
+## Project Setting
 
-### 프로젝트 환경 구성
+### Project Directory Structure | 3 Layer Architecture
+
+This architecture from [Bulletproof node.js project architecture 🛡️](https://softwareontheroad.com/ideal-nodejs-project-structure) written by Sam Quinn
+
+| Directory   | Description                                                |
+| ----------- | ---------------------------------------------------------- |
+| app.ts      | App entry point                                            |
+| api         | Express route controllers for all the endpoints of the app |
+| graphql     | Apollo-GraphQL Resolver                                    |
+| config      | Environment variables and configuration related stuff      |
+| jobs        | Jobs definitions for agenda.js (Scheduler modules)         |
+| loaders     | Split the startup process into modules                     |
+| models      | Database models                                            |
+| services    | All the business logic is here                             |
+| subscribers | Event handlers for async task                              |
+| types       | Type declaration files (d.ts) for Typescript               |
+
+I'm going to apply "The principle of separation of concerns" with Controller - Service Layer - Data Access Layer (3 Layer Architecture).
+
+### Project Init
 
 ```bash
 $mkdir <serverName>
@@ -21,7 +40,7 @@ $touch index.js or index.tsx
 $npm init -y
 ```
 
-### Apollo Server 설치
+### Install Apollo Server
 
 ```bash
  $npm i apollo-server graphql
@@ -30,11 +49,11 @@ $npm init -y
 -   apollo-serve는 Apollo에서 제공하는 GaphQL 서버 패키지입니다.
 -   graphql은 Facebook에서 정의한 GraphQL 스펙을 JS언어로 구현한 패키지입니다.
 
-apollo-server와 apollo-client 모두 내부적으로 graphql 패키지에 의존하고 있기에 반드시 함께 설치해주어야 합니다.
+Apollo-server and Apollo-Client depends on graphql package, so you're supposed to install this package together.
 
-### 기본적인 서버 코드 작성하기
+### Basic Server Code | Index.ts
 
-apollo-server를 이용하기 위해서 기본적으로 다음과 같이 index.js파일을 작성합니다.
+First of all, We write index.ts for using Apollo-Server.
 
 ```javascript
 const { ApolloServer, gql } = require("apollo-server");
@@ -68,7 +87,7 @@ const resolvers = {
 ```javascript
 const server = new ApolloServer({
     typeDefs,
-    resolvers,
+    resolvers
 });
 
 server.listen().then(({ url }) => {
@@ -78,16 +97,16 @@ server.listen().then(({ url }) => {
 
 -   위 코드는 typeDefs와 resolvers를 ApolloServer 생성자에 넘겨 GraphQL 서버 인스턴스를 생성하고 그 서버를 시작해주는 코드를 작성합니다.
 
-### 서버 구동
+### Run Server
 
-콘솔에 다음과 같이 입력하면 GraphQL 서버가 구동되고 콘솔에 EndPoint URL이 출려됩니다.
+When run Apollo-Server with below command, You can see "Apollo Server ready at http/graphql"
 
 ```bash
 $node .
 $node index.js
 ```
 
-### 서버 테스트
+### Server Test
 
 콘솔에 다음과 같이 서버의 응답 결과를 테스트할 수 있습니다.
 
@@ -99,7 +118,7 @@ $curl -X POST "http;//localhost:4000" -H "content-type: application/json" -d '{"
     -   원격 서버(FTP, HTTP등)에서 파일을 받아 보여주는 도구입니다.
 -   또한 Graph QL 서버는 Playground라고 하는 웹 기반 툴이 있어서 브라우저에서도 쿼리를 확인할 수 있다는 장점이 있습니다.
 
-## 익스프레스 설정
+## Express Setting
 
 ```bash
  $npm i apollo-server-express
@@ -171,18 +190,18 @@ module.exports = (sequelize, DataTypes) => {
         {
             title: {
                 type: DataTypes.STRING(20),
-                allowNull: false,
+                allowNull: false
             },
             description: {
                 type: DataTypes.TEXT,
-                allowNull: false,
-            },
+                allowNull: false
+            }
         },
         {
             charset: "utf8",
             collate: "utf8_general_ci",
-            tableName: "posts",
-        },
+            tableName: "posts"
+        }
     );
     Post.associate = db => {
         db.Post.belongsTo(db.User);
@@ -220,7 +239,7 @@ dotenv.config();
 const server = new ApolloServer({
     typeDefs: gql(typeDefs),
     resolvers,
-    context: { db },
+    context: { db }
 });
 
 // Express Environment Setting
@@ -232,8 +251,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
     cors({
         origin: true,
-        credentials: true,
-    }),
+        credentials: true
+    })
 );
 app.use("/", express.static("public"));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -244,10 +263,10 @@ app.use(
         secret: process.env.COOKIE_SECRET,
         cookie: {
             httpOnly: true,
-            secure: false,
+            secure: false
         },
-        name: "...",
-    }),
+        name: "..."
+    })
 );
 
 //Database Init
@@ -283,18 +302,18 @@ const baseContext = {
         logout: () => {
             baseContext.user = null;
             this.user = null;
-        },
+        }
     },
     db,
-    user: null,
+    user: null
 };
 
 module.exports = {
     testServer: new ApolloServer({
         ...graphqlConfig,
-        context: baseContext,
+        context: baseContext
     }),
-    baseContext,
+    baseContext
 };
 ```
 
@@ -337,7 +356,7 @@ it('유저를 생성하는 테스트', async () => {
 ...
 ```
 
-## 프로젝트 고찰
+## Reviewing of Project
 
 ### 01. Graph QL의 사용
 
@@ -370,3 +389,39 @@ it('유저를 생성하는 테스트', async () => {
 | 단점 | - 테스트 코드를 작성하기 위해 소모되는 시간이 많다.(생산성 하락)</br> - 테스트 코드를 테스트 하기 위한 복잡한 과정이 생긴다.                                                  |
 
 이를 통해 테스트의 필요성을 느꼈지만, 상황에 따라 테스트를 도입할 지 말지에 대한 생각을 하게되었다.
+
+### 03. GraphQL Codegen
+
+[GraphQL Codegen]("https://graphql-code-generator.com/") is the paser which is translate between schema.graphql and native language. We can get some types for tpyescript to use graphql-codegen.
+
+```bash
+$yarn add -D @graphql-codegen/cli
+$yarn add -D @graphql-codegen/typescript
+```
+
+And we need to write some script code like this.
+
+```json
+{
+    "scripts": {
+        "codegen:start": "graphql-codegen graphql-codegen --config codegen.yml",
+        "codegen:init": "graphql-codegen init"
+    }
+}
+```
+
+Also, we need configuration for graphql-codegne `codegen.yml`
+
+```YAML
+overwrite: true
+schema: "./graphql/schema/schema.graphql"
+documents: null
+generates:
+    src/types/graphql.ts:
+       config:
+       contextType: ../context                    #MyContext
+       plugins:
+            - "typescript"
+            - "typescript-resolvers"
+
+```

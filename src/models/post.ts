@@ -1,40 +1,44 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
-import { IDatabaseTable } from ".";
-import { TableNameEnum } from "@interface/common/Table";
-import { IPost } from "@interface/common/Post";
+import { IDatabase } from ".";
+import { TABLE_NAME } from "types/services/Table";
+import { IPost } from "types/services/Post";
+
+export interface IPostModel extends Model, IPost {}
 
 export type PostStatic = typeof Model & {
-    new (values?: object, options?: BuildOptions): IPost;
-    connectAssociate: (db: IDatabaseTable) => void;
+    new (values?: object, options?: BuildOptions): IPostModel;
+    connectAssociate: (db: IDatabase) => void;
+    addComment: (string: string) => Promise<any>;
+    removeComment: (string: string) => Promise<any>;
 };
 
 export default (sequelize: Sequelize) => {
     const Post: PostStatic = <PostStatic>sequelize.define(
-        TableNameEnum.POST,
+        TABLE_NAME.POST,
         {
             id: {
                 primaryKey: true,
                 allowNull: false,
                 type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: DataTypes.UUIDV4
             },
             title: {
                 type: DataTypes.STRING(20),
-                allowNull: false,
+                allowNull: false
             },
             description: {
                 type: DataTypes.TEXT,
-                allowNull: false,
-            },
+                allowNull: false
+            }
         },
         {
-            tableName: TableNameEnum.POST,
-            underscored: true,
+            tableName: TABLE_NAME.POST,
+            paranoid: true,
             charset: "utf8",
-            collate: "utf8_general_ci",
-        },
+            collate: "utf8_general_ci"
+        }
     );
-    Post.connectAssociate = (database: IDatabaseTable) => {
+    Post.connectAssociate = (database: IDatabase) => {
         database.Post.belongsTo(database.User);
         database.Post.belongsTo(database.Category);
         database.Post.hasMany(database.Comment);

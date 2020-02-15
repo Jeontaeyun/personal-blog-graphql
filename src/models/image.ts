@@ -1,36 +1,40 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
-import { IDatabaseTable } from ".";
-import { TableNameEnum } from "@interface/common/Table";
-import { IImage } from "@interface/common/Image";
+import { IDatabase } from ".";
+import { TABLE_NAME } from "types/services/Table";
+
+export interface IImageModel extends Model {
+    readonly id: string;
+    readonly src: string;
+}
 
 export type ImageStatic = typeof Model & {
-    new (values?: object, options?: BuildOptions): IImage;
-    connectAssociate: (db: IDatabaseTable) => void;
+    new (values?: object, options?: BuildOptions): IImageModel;
+    connectAssociate: (db: IDatabase) => void;
 };
 
 export default (sequelize: Sequelize) => {
     const Image: ImageStatic = <ImageStatic>sequelize.define(
-        TableNameEnum.IMAGE,
+        TABLE_NAME.IMAGE,
         {
             id: {
                 primaryKey: true,
                 allowNull: false,
                 type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: DataTypes.UUIDV4
             },
             src: {
                 type: DataTypes.STRING(200),
-                allowNull: false,
-            },
+                allowNull: false
+            }
         },
         {
-            tableName: TableNameEnum.IMAGE,
-            underscored: true,
+            tableName: TABLE_NAME.IMAGE,
+            paranoid: true,
             charset: "utf8",
-            collate: "utf8_general_ci",
-        },
+            collate: "utf8_general_ci"
+        }
     );
-    Image.connectAssociate = (database: IDatabaseTable) => {
+    Image.connectAssociate = (database: IDatabase) => {
         database.Image.belongsTo(database.Post);
     };
     return Image;

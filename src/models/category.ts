@@ -1,42 +1,41 @@
 import { BuildOptions, DataTypes, Model, Sequelize } from "sequelize";
-import { IDatabaseTable } from ".";
-import { ICategory } from "@interface/common/Category";
-import { TableNameEnum } from "@interface/common/Table";
+import { IDatabase } from ".";
+import { TABLE_NAME } from "types/services/Table";
+
+export interface ICategoryModel extends Model {
+    readonly id: string;
+    readonly name: string;
+}
 
 export type CategoryStatic = typeof Model & {
-    new (values?: object, options?: BuildOptions): ICategory;
-    connectAssociate: (db: IDatabaseTable) => void;
+    new (values?: object, options?: BuildOptions): ICategoryModel;
+    connectAssociate: (db: IDatabase) => void;
 };
 
 export default (sequelize: Sequelize) => {
     const Category: CategoryStatic = <CategoryStatic>sequelize.define(
-        TableNameEnum.CATEGORY,
+        TABLE_NAME.CATEGORY,
 
         {
-            /**
-             * *Sequelize ID 항목을 UUID(범용 고유 식별자)로 생성하는 방법
-             */
             id: {
                 primaryKey: true,
                 type: DataTypes.UUID,
-                defaultValue: DataTypes.UUIDV4,
+                defaultValue: DataTypes.UUIDV4
             },
             name: {
                 type: DataTypes.STRING(20),
-                allowNull: false,
-            },
+                allowNull: false
+            }
         },
         {
-            tableName: TableNameEnum.CATEGORY,
-            underscored: true,
-            createdAt: "created",
-            updatedAt: "updated_at",
+            tableName: TABLE_NAME.CATEGORY,
+            paranoid: true,
             charset: "utf8",
-            collate: "utf8_general_ci",
-        },
+            collate: "utf8_general_ci"
+        }
     );
 
-    Category.connectAssociate = database => {
+    Category.connectAssociate = (database: IDatabase) => {
         database.Category.hasMany(database.Post);
     };
     return Category;

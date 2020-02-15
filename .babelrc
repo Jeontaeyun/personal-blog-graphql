@@ -1,26 +1,21 @@
 {
-    "presets": [
-        [
-            "@babel/preset-env",
-            {
-                "targets": {
-                    "node": "current"
-                }
-            }
-        ],
-        "@babel/preset-typescript"
-    ],
+    "presets": [["@babel/preset-env", { "targets": { "node": "current" } }], "@babel/preset-typescript"],
     "plugins": [
         [
             "module-resolver",
             {
-                "root": ["."],
+                "root": ["./"],
                 "alias": {
-                    "@interface": "./src/interface",
-                    "@router": "./src/router"
+                    "types": "./src/types",
+                    "api": "./src/api",
+                    "services": "./src/services",
+                    "config": "./src/config",
+                    "models": "./src/models"
                 }
             }
         ],
+        ["@babel/plugin-proposal-decorators", { "legacy": true }],
+        ["@babel/plugin-proposal-class-properties", { "loose": true }],
         ["@babel/plugin-transform-typescript"]
     ],
     "comments": false,
