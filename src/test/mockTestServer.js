@@ -17,17 +17,17 @@ const baseContext = {
         logout: () => {
             baseContext.user = null;
             this.user = null;
-        },
+        }
     },
     db,
-    user: null,
+    user: null
 };
 
 module.exports = {
     testServer: new ApolloServer({
         ...graphqlConfig,
-        context: baseContext,
+        context: baseContext
     }),
     // For easy access in tests
-    baseContext,
+    baseContext
 };

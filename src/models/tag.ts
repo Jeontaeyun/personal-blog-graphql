@@ -1,10 +1,13 @@
 import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
 import { IDatabase } from ".";
 import { TABLE_NAME } from "types/services/Table";
+import { PostStatic, IPostModel } from "./post";
 
 export interface ITagModel extends Model {
     readonly id: string;
     readonly name: string;
+    removePost: (post: IPostModel) => Promise<any>;
+    addPost: (post: IPostModel) => Promise<any>;
 }
 
 export type TagStatic = typeof Model & {
@@ -35,7 +38,7 @@ export default (sequelize: Sequelize) => {
         }
     );
     Tag.connectAssociate = (database: IDatabase) => {
-        database.Tag.belongsToMany(database.Post, { through: "PostTag" });
+        database.Tag.belongsToMany(database.Post, { through: "PostTag", as: "post" });
     };
     return Tag;
 };

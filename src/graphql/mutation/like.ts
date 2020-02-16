@@ -1,8 +1,12 @@
 import { ResolverContextType } from "types/services/User";
+import Container from "typedi";
+import { ServiceUtils } from "services";
 
-const createLiked = async (_: any, { post_id }: { post_id: string }, { db, user }: ResolverContextType, info: any) => {
-    if (!user) return new Error("로그인이 필요합니다.");
+const utilService = Container.get(ServiceUtils);
+
+const createLiked = async (_: any, { post_id }: { post_id: string }, context: ResolverContextType, info: any) => {
     try {
+        utilService.checkLogined(context.user);
         const post = await db.Post.findOne({
             where: { id: post_id }
         });
@@ -14,8 +18,8 @@ const createLiked = async (_: any, { post_id }: { post_id: string }, { db, user 
     }
 };
 const deleteLiked = async (_: any, { post_id }: { post_id: string }, { db, user }: ResolverContextType, info: any) => {
-    if (!user) return new Error("로그인이 필요합니다.");
     try {
+        utilService.checkLogined(context.user);
         const post = await db.Post.findOne({
             where: { id: post_id }
         });

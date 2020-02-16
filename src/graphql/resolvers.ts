@@ -1,17 +1,11 @@
-/**
- * * Query
- */
-import postQuery from "./query/postQuery";
-import categoryQuery from "./query/categoryQuery";
+import postQuery from "./query/post";
+import categoryQuery from "./query/category";
 
-/**
- * * Mutation
- */
-import postMutation from "./mutation/postMutation";
+import postMutation from "./mutation/post";
 import userMutation from "./mutation/user";
-import commentMutation from "./mutation/commentMutation";
-import categoryMutation from "./mutation/categoryMutation";
-import likeMutation from "./mutation/likeMutation";
+import commentMutation from "./mutation/comment";
+import categoryMutation from "./mutation/category";
+import likeMutation from "./mutation/like";
 import { ResolverContextType } from "types/services/User";
 
 export default {
