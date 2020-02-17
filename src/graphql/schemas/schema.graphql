@@ -3,9 +3,9 @@
 type Comment {
     id: ID!
     description: String!
-    createdAt: String!
-    User: User!
-    PostId: Int!
+    createdAt: String
+    user: User
+    postId: Int
 }
 
 type Post {
@@ -33,6 +33,7 @@ type Query {
     posts(first: Int, afterCursor: Int, ord: String, category_id: Int): [Post!]!
     post(id: ID!): Post
     user(id: ID!): User!
+    comments(id: ID!): [Comment!]!
     categorys: [Category!]!
 }
 
@@ -44,13 +45,13 @@ type Mutation {
     updateCategory(id: ID!, name: String!): Boolean!
     deleteCategory(id: ID!): Boolean!
 
-    createPost(title: String!, description: String!, tags: String!, category_id: ID!): Post!
-    updatePost(id: ID!, title: String!, description: String!, tags: String, category_id: ID): Boolean!
+    createPost(title: String!, description: String!, tags: String!, categoryId: ID): Post!
+    updatePost(id: ID!, title: String!, description: String!, tags: String, categoryId: ID): Boolean!
     deletePost(id: ID!): Boolean!
 
-    createComment(id: ID!, description: String!): Comment!
-    updateComment(id: ID!, description: String!): [Int]!
-    deleteComment(id: ID!): Int!
+    createComment(postId: ID!, description: String!): Comment!
+    updateComment(postId: ID!, description: String!): Boolean!
+    deleteComment(postId: ID!): Boolean!
 
     createRecomment(postId: ID!, id: ID!, description: String!): Comment!
 

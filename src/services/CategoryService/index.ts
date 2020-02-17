@@ -76,5 +76,7 @@ class CategoryService implements ICategoryService {
         }
     };
 }
+
 Container.set(CategoryService, new CategoryService(database.Category));
+
 export default CategoryService;

@@ -14,8 +14,8 @@ const posts = async (
     try {
         const obtainedPosts = postService.getPosts(ord);
         return obtainedPosts;
-    } catch (e) {
-        return new Error("데이터 베이스 오류");
+    } catch (error) {
+        throw new Error("데이터 베이스 오류");
     }
 };
 const post = async (_: any, { id }: { id: string }, context: ResolverContextType, info: any) => {

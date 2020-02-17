@@ -3,13 +3,14 @@ import { IDatabase } from ".";
 import { TABLE_NAME } from "types/services/Table";
 import { IPost } from "types/services/Post";
 import { ITagModel } from "./tag";
+import { ICommentModel } from "./comment";
 
 export interface IPostModel extends Model, IPost {
     getTags: () => Promise<any>;
     addTags: (tags: ITagModel[]) => Promise<any>;
     removeTags: (tags: ITagModel[]) => Promise<any>;
-    addComment: (string: string) => Promise<any>;
-    removeComment: (string: string) => Promise<any>;
+    addComment: (comment: ICommentModel) => Promise<any>;
+    removeComment: (comment: ICommentModel) => Promise<any>;
 }
 
 export type PostStatic = typeof Model & {

@@ -46,7 +46,7 @@ class PostService implements IPostService {
             if (result) {
                 return result;
             } else {
-                throw Error("There is no Post");
+                throw Error("포스트가 존재하지 않습니다.");
             }
         } catch (error) {
             console.error(error);
@@ -89,13 +89,13 @@ class PostService implements IPostService {
     public createPost = async (postInput: IPostInput, userId: string) => {
         try {
             const { title, description, tags, categoryId } = postInput;
+            await this._checkHasCategory(categoryId);
             const newPost = await this._postModel.create({
                 title,
                 description,
                 categoryId,
                 userId
             });
-
             await this._createAndAssociateTag(newPost, tags);
 
             const createdPost = await this._postModel.findOne({
@@ -116,7 +116,6 @@ class PostService implements IPostService {
                     }
                 ]
             });
-            console.log(createdPost?.toJSON());
             return createdPost?.toJSON();
         } catch (error) {
             console.error(error);
@@ -127,15 +126,10 @@ class PostService implements IPostService {
     public updatePost = async (postInput: IPostInput & { id: string }) => {
         try {
             const { id, tags, title, description, categoryId } = postInput;
-            const post = await this._postModel.findOne({
-                where: { id }
-            });
-            if (!post) {
-                throw new Error("포스트가 존재하지 않습니다.");
-            }
+            const exPost = await this._checkHasPost(id);
             if (tags) {
-                await this._removeAndSeparateTag(post);
-                await this._createAndAssociateTag(post, tags);
+                await this._removeAndSeparateTag(exPost);
+                await this._createAndAssociateTag(exPost, tags);
             }
             const [isUpdated] = await this._postModel.update(
                 {
@@ -154,12 +148,20 @@ class PostService implements IPostService {
 
     public deletePost = async (id: string) => {
         try {
-            const hasPost = !!(await this._postModel.findOne({ where: { id } }));
-            if (hasPost) {
-                const isDeleted = await this._postModel.destroy({
-                    where: { id }
-                });
-                return !!isDeleted;
+            await this._checkHasPost(id);
+            const isDeleted = await this._postModel.destroy({ where: { id } });
+            return !!isDeleted;
+        } catch (error) {
+            console.error(error);
+            throw Error(error);
+        }
+    };
+
+    private _checkHasPost = async (id: string) => {
+        try {
+            const exPost = await this._postModel.findOne({ where: { id } });
+            if (exPost) {
+                return exPost;
             } else {
                 throw new Error("포스트가 존재하지 않습니다.");
             }
@@ -169,7 +171,22 @@ class PostService implements IPostService {
         }
     };
 
-    _createAndAssociateTag = async (newPost: IPostModel, tags: string) => {
+    private _checkHasCategory = async (id: string) => {
+        try {
+            const exCategory = await this._categoryModel.findOne({ where: { id } });
+            console.log(exCategory, id);
+            if (exCategory) {
+                return exCategory;
+            } else {
+                throw new Error("카테고리가 존재하지 않습니다.");
+            }
+        } catch (error) {
+            console.error(error);
+            throw Error(error);
+        }
+    };
+
+    private _createAndAssociateTag = async (newPost: IPostModel, tags: string) => {
         try {
             let tagArray: string[] = [];
             if (tags) {
@@ -190,8 +207,9 @@ class PostService implements IPostService {
         }
     };
 
-    _removeAndSeparateTag = async (post: IPostModel) => {
+    private _removeAndSeparateTag = async (post: IPostModel) => {
         try {
+            console.log(post);
             const tags = await post.getTags();
             const exTags: ITagModel[] = Object.values(tags);
             return await post.removeTags(exTags);
@@ -200,9 +218,9 @@ class PostService implements IPostService {
         }
     };
 
-    _addImageFunction = () => {};
+    private _addImageFunction = () => {};
 
-    _removeImageFunction = () => {};
+    private _removeImageFunction = () => {};
 }
 
 Container.set(PostService, new PostService(database.Post, database.User, database.Tag, database.Category));

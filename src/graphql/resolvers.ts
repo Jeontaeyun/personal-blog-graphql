@@ -1,5 +1,6 @@
 import postQuery from "./query/post";
 import categoryQuery from "./query/category";
+import commentQuery from "./query/comment";
 
 import postMutation from "./mutation/post";
 import userMutation from "./mutation/user";
@@ -12,6 +13,7 @@ export default {
     Query: {
         ...postQuery,
         ...categoryQuery,
+        ...commentQuery,
         user: async (
             _: any,
             { userId }: { userId: string },

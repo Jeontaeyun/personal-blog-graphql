@@ -1,22 +1,17 @@
 import { ResolverContextType } from "types/services/User";
+import Container from "typedi";
+import { ReactionService } from "services";
 
-const comments = async (_: any, { post_id }: { post_id: string }, { db }: ResolverContextType, info: any) => {
+const reactionService = Container.get(ReactionService);
+
+const comments = async (_: any, args: { id: string }, context: ResolverContextType, info: any) => {
     try {
-        const post = await db.Post.findOne({ where: { post_id } });
-        if (!post) return new Error("포스트가 존재하지 않습니다.");
-        const obtainedComments = await db.Comment.findAll({
-            where: { PostId: post_id },
-            include: [
-                {
-                    model: db.User,
-                    attributes: ["id", "nickname"]
-                }
-            ],
-            order: [["createdAt", "ASC"]]
-        });
+        const { id } = args;
+        const obtainedComments = await reactionService.getComments(id);
         return obtainedComments;
-    } catch (e) {
-        return new Error("데이터 베이스 오류");
+    } catch (error) {
+        console.error(error);
+        return new Error(error);
     }
 };
 
