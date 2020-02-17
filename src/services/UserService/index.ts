@@ -13,6 +13,8 @@ interface IUserService {
     signUpWithLocal: (userInput: ILocalSignUpInput) => Promise<any>;
     login: () => void;
     logout: () => void;
+    updateProfile?: () => void;
+    updateUserPassword?: (password: string, newPassword: string) => Promise<boolean>;
 }
 
 @Service()

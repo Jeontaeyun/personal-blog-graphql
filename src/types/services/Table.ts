@@ -1,8 +1,8 @@
 export const TABLE_NAME = {
-    CATEGORY: "CATEGORYS",
-    COMMENT: "COMMENTS",
-    IMAGE: "IMAGES",
-    POST: "POSTS",
-    TAG: "TAGS",
-    USER: "USERS"
+    CATEGORY: "category",
+    COMMENT: "comment",
+    IMAGE: "image",
+    POST: "post",
+    TAG: "tag",
+    USER: "user"
 };

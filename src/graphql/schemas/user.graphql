@@ -1,0 +1,14 @@
+enum USER_GRANT_ENUM {
+    ADMIN
+    GUEST
+}
+
+type User {
+    id: ID!
+    userId: String!
+    nickname: String!
+    posts: [Post!]!
+    comments: [Comment!]!
+    token: String!
+    grant: Int!
+}

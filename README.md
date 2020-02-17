@@ -12,7 +12,7 @@ I am going to make some blog project with Typescript, GraphQL(Apollo-Client) and
 
 ## Project Setting
 
-### Project Directory Structure | 3 Layer Architecture
+### Directory Structure | 3 Layer Architecture
 
 This architecture from [Bulletproof node.js project architecture 🛡️](https://softwareontheroad.com/ideal-nodejs-project-structure) written by Sam Quinn
 

@@ -1,19 +1,11 @@
-type User {
-    id: ID!
-    userId: String!
-    nickname: String!
-    posts: [Post!]!
-    comments: [Comment!]!
-    token: String!
-    grant: Int!
-}
+# import User from "user.graphql"
 
 type Comment {
     id: ID!
     description: String!
-    createdAt: String!
-    User: User!
-    PostId: Int!
+    createdAt: String
+    user: User
+    postId: Int
 }
 
 type Post {
@@ -21,10 +13,10 @@ type Post {
     title: String!
     description: String!
     createdAt: String!
-    User: User!
-    Tags: [Tag!]!
-    Category: Category!
-    Liker: [User!]!
+    user: User!
+    tags: [Tag]!
+    category: Category!
+    liker: [User!]!
 }
 
 type Category {
@@ -38,34 +30,30 @@ type Tag {
 }
 
 type Query {
-    posts(limit: Int, ord: String, category_id: Int): [Post!]!
-    post(postId: ID!): Post
-    user(userId: ID!): User!
+    posts(first: Int, afterCursor: Int, ord: String, category_id: Int): [Post!]!
+    post(id: ID!): Post
+    user(id: ID!): User!
+    comments(id: ID!): [Comment!]!
     categorys: [Category!]!
-}
-
-enum USER_GRANT_ENUM {
-    ADMIN
-    GUEST
 }
 
 type Mutation {
     createToken(userId: String!, password: String!): User!
     signUpWithLocal(userId: String!, password: String!, nickname: String!, grant: USER_GRANT_ENUM!): User!
 
-    createCategory(category_name: String!): Category!
-    updateCategory(category_id: Int!, category_name: String!): [Int!]!
-    deleteCategory(category_id: Int!): Int!
+    createCategory(name: String!): Category!
+    updateCategory(id: ID!, name: String!): Boolean!
+    deleteCategory(id: ID!): Boolean!
 
-    createPost(title: String!, description: String!, tag: String!, category_id: ID!): Post!
-    updatePost(postId: ID!, title: String!, description: String!, tag: String, category_id: ID): [Int!]!
-    deletePost(postId: ID!): Int!
+    createPost(title: String!, description: String!, tags: String!, categoryId: ID): Post!
+    updatePost(id: ID!, title: String!, description: String!, tags: String, categoryId: ID): Boolean!
+    deletePost(id: ID!): Boolean!
 
     createComment(postId: ID!, description: String!): Comment!
-    updateComment(comment_id: ID!, description: String!): [Int]!
-    deleteComment(comment_id: ID!): Int!
+    updateComment(postId: ID!, description: String!): Boolean!
+    deleteComment(postId: ID!): Boolean!
 
-    createRecomment(postId: ID!, comment_id: ID!, description: String!): Comment!
+    createRecomment(postId: ID!, id: ID!, description: String!): Comment!
 
     createLiked(postId: ID!): Int!
     deleteLiked(postId: ID!): Int!

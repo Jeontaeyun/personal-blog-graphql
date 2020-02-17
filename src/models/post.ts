@@ -2,14 +2,20 @@ import { Model, BuildOptions, DataTypes, Sequelize } from "sequelize";
 import { IDatabase } from ".";
 import { TABLE_NAME } from "types/services/Table";
 import { IPost } from "types/services/Post";
+import { ITagModel } from "./tag";
+import { ICommentModel } from "./comment";
 
-export interface IPostModel extends Model, IPost {}
+export interface IPostModel extends Model, IPost {
+    getTags: () => Promise<any>;
+    addTags: (tags: ITagModel[]) => Promise<any>;
+    removeTags: (tags: ITagModel[]) => Promise<any>;
+    addComment: (comment: ICommentModel) => Promise<any>;
+    removeComment: (comment: ICommentModel) => Promise<any>;
+}
 
 export type PostStatic = typeof Model & {
     new (values?: object, options?: BuildOptions): IPostModel;
     connectAssociate: (db: IDatabase) => void;
-    addComment: (string: string) => Promise<any>;
-    removeComment: (string: string) => Promise<any>;
 };
 
 export default (sequelize: Sequelize) => {
@@ -43,7 +49,7 @@ export default (sequelize: Sequelize) => {
         database.Post.belongsTo(database.Category);
         database.Post.hasMany(database.Comment);
         database.Post.hasMany(database.Image);
-        database.Post.belongsToMany(database.Tag, { through: "PostTag" });
+        database.Post.belongsToMany(database.Tag, { through: "PostTag", as: "tags" });
         database.Post.belongsToMany(database.User, { through: "Like", as: "Liker" });
     };
     return Post;

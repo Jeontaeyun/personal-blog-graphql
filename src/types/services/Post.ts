@@ -12,13 +12,14 @@ export interface IPostInput {
     id?: string;
     title: string;
     description: string;
-    tag: string[];
+    tags: string;
     categoryId: string;
 }
 
 export interface IPostService {
+    getPosts: () => Promise<any>;
     getPostById: (id: string) => Promise<any>;
-    createPost: (data: IPostInput) => Promise<any>;
-    updatePost: () => Promise<any>;
-    deletePost: () => Promise<any>;
+    createPost: (postInput: IPostInput, userId: string) => Promise<any>;
+    updatePost: (postInput: IPostInput & { id: string }, userId: string) => Promise<boolean>;
+    deletePost: (id: string, userId: string) => Promise<boolean>;
 }

@@ -7,3 +7,9 @@ export interface IComment {
     createdAt?: number;
     updatedAy?: number;
 }
+
+export interface ICommentInput {
+    description: string;
+    userId: string;
+    recommentId?: string;
+}
