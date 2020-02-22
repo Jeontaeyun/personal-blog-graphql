@@ -173,7 +173,7 @@ class PostService implements IPostService {
 
     private _checkHasCategory = async (id: string) => {
         try {
-            const exCategory = await this._categoryModel.findOne({ where: { id } });
+            const exCategory = await this._categoryModel.findOne({ where: { id: "" } });
             console.log(exCategory, id);
             if (exCategory) {
                 return exCategory;

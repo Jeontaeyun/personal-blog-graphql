@@ -5,6 +5,7 @@ import { TABLE_NAME } from "types/services/Table";
 export interface ICommentModel extends Model {
     readonly id: string;
     readonly description: string;
+    readonly UserId: string;
 }
 
 export type CommentStatic = typeof Model & {

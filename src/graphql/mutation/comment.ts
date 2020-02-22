@@ -16,77 +16,53 @@ const createComment = async (
         const { postId, description } = commentInput;
         const newComment = await reactionService.createComment(postId, { userId: context.user.id, description });
         return newComment;
-    } catch (e) {
-        return new Error("데이터 베이스 오류");
+    } catch (error) {
+        console.error(error);
+        throw new Error(error);
     }
 };
 const updateComment = async (
     _: any,
-    { comment_id, description }: { comment_id: string; description: string },
-    { database, user }: ResolverContextType,
+    data: { commentId: string; description: string },
+    context: ResolverContextType,
     info: any
 ) => {
-    if (!user) return new Error("로그인이 필요합니다.");
+    await utilService.checkLogined(context.user);
     try {
-        const comment = await database.Comment.findOne({
-            where: { id: comment_id }
-        });
-        if (!comment) return new Error("댓글이 존재하지 않습니다.");
-        if (comment.get("UserId") !== user.id) return new Error("해당 댓글에 대한 권한이 없습니다.");
-        return await database.Comment.update(
-            {
-                description
-            },
-            {
-                where: { id: comment_id }
-            }
-        );
-    } catch (e) {
-        return new Error("데이터 베이스 오류");
+        const { commentId, description } = data;
+        const { user } = context;
+        const isUpdated = await reactionService.updateComment(commentId, { userId: user.id, description });
+        return isUpdated;
+    } catch (error) {
+        console.error(error);
+        throw new Error(error);
     }
 };
-const deleteComment = async (
-    _: any,
-    { comment_id }: { comment_id: string },
-    { database, user }: ResolverContextType,
-    info: any
-) => {
-    if (!user) return new Error("로그인이 필요합니다.");
+const deleteComment = async (_: any, data: { commentId: string }, context: ResolverContextType, info: any) => {
+    await utilService.checkLogined(context.user);
     try {
-        const comment = await database.Comment.findOne({
-            where: { id: comment_id }
-        });
-        if (!comment) return new Error("댓글이 존재하지 않습니다.");
-        if (comment.get("UserId") !== user.id) return new Error("해당 댓글에 대한 권한이 없습니다.");
-        return await database.Comment.destroy({
-            where: { id: comment_id }
-        });
-    } catch (e) {
-        return new Error("데이터 베이스 오류");
+        const { commentId } = data;
+        const { user } = context;
+        const isDeleted = await reactionService.deleteComment(commentId, user.id);
+        return isDeleted;
+    } catch (error) {
+        console.error(error);
+        throw new Error(error);
     }
 };
 
 const createRecomment = async (
     _: any,
-    { post_id, comment_id, description }: { post_id: string; comment_id: string; description: string },
-    { database, user }: ResolverContextType,
+    data: { postId: string; commentId: string; description: string },
+    context: ResolverContextType,
     info: any
 ) => {
-    if (!user) return new Error("로그인이 필요합니다.");
+    await utilService.checkLogined(context.user);
     try {
-        const comment = await database.Comment.findOne({
-            where: { id: comment_id }
-        });
-        if (!comment) return new Error("댓글이 존재하지 않습니다.");
-        const newReComment = database.Comment.create({
-            description: description,
-            UserId: user.id,
-            PostId: post_id,
-            RecommentId: comment_id
-        });
-        return newReComment;
-    } catch (e) {
-        return new Error("데이터 베이스 오류");
+        return true;
+    } catch (error) {
+        console.error(error);
+        throw new Error(error);
     }
 };
 

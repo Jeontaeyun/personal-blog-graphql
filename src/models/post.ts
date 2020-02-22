@@ -11,6 +11,8 @@ export interface IPostModel extends Model, IPost {
     removeTags: (tags: ITagModel[]) => Promise<any>;
     addComment: (comment: ICommentModel) => Promise<any>;
     removeComment: (comment: ICommentModel) => Promise<any>;
+    addLiker: (userId: string) => Promise<any>;
+    removeLiker: (userId: string) => Promise<any>;
 }
 
 export type PostStatic = typeof Model & {

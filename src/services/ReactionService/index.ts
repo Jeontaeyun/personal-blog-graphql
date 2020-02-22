@@ -61,6 +61,71 @@ class ReactionService implements IReactionService {
         }
     };
 
+    public updateComment = async (commentId: string, commentInput: ICommentInput) => {
+        try {
+            const { description, userId } = commentInput;
+            const comment = await this._checkHasComment(commentId);
+            await this._checkHasPermission(userId, comment.UserId);
+            const [isUpdated] = await database.Comment.update({ description }, { where: { id: commentId } });
+            return !!isUpdated;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
+    public deleteComment = async (commentId: string, userId: string) => {
+        try {
+            const comment = await this._checkHasComment(commentId);
+            await this._checkHasPermission(userId, comment.UserId);
+            const isDeleted = await database.Comment.destroy({ where: { id: commentId } });
+            return isDeleted;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
+    public createReComment = async () => {
+        try {
+            const comment = await database.Comment.findOne({
+                where: { id: comment_id }
+            });
+            if (!comment) return new Error("댓글이 존재하지 않습니다.");
+            const newReComment = database.Comment.create({
+                description: description,
+                UserId: user.id,
+                PostId: post_id,
+                RecommentId: comment_id
+            });
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
+    public createLike = async (postId: string, userId: string) => {
+        try {
+            const exPost = await this._checkHasPost(postId);
+            await exPost.addLiker(userId);
+            return true;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
+    public deleteLike = async (postId: string, userId: string) => {
+        try {
+            const exPost = await this._checkHasPost(postId);
+            await exPost.removeLiker(userId);
+            return true;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
     private _checkHasPost = async (postId: string) => {
         try {
             const hasPost = await this._postModel.findOne({ where: { id: postId } });
@@ -68,6 +133,34 @@ class ReactionService implements IReactionService {
                 return hasPost;
             } else {
                 throw new Error("포스트가 존재하지 않습니다.");
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
+    private _checkHasComment = async (commentId: string) => {
+        try {
+            const hasComment = await this._commentModel.findOne({ where: { id: commentId } });
+
+            if (hasComment) {
+                return hasComment;
+            } else {
+                throw new Error("댓글이 존재하지 않습니다.");
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
+
+    private _checkHasPermission = async (id: string, commentUserId: string) => {
+        try {
+            if (id === commentUserId) {
+                return true;
+            } else {
+                throw new Error("해당 댓글에 대한 권한이 없습니다.");
             }
         } catch (error) {
             console.error(error);
