@@ -86,18 +86,17 @@ class ReactionService implements IReactionService {
         }
     };
 
-    public createReComment = async () => {
+    public createReComment = async (postId: string, commentId: string, commentInput: ICommentInput) => {
         try {
-            const comment = await database.Comment.findOne({
-                where: { id: comment_id }
-            });
-            if (!comment) return new Error("댓글이 존재하지 않습니다.");
-            const newReComment = database.Comment.create({
+            const { description, userId } = commentInput;
+            await this._checkHasComment(commentId);
+            const newReComment = this._commentModel.create({
                 description: description,
-                UserId: user.id,
-                PostId: post_id,
-                RecommentId: comment_id
+                UserId: userId,
+                PostId: postId,
+                RecommentId: commentId
             });
+            return newReComment;
         } catch (error) {
             console.error(error);
             throw error;

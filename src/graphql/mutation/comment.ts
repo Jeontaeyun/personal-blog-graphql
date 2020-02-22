@@ -59,7 +59,10 @@ const createRecomment = async (
 ) => {
     await utilService.checkLogined(context.user);
     try {
-        return true;
+        const { postId, commentId, description } = data;
+        const { user } = context;
+        const newComment = await reactionService.createReComment(postId, commentId, { userId: user.id, description });
+        return newComment;
     } catch (error) {
         console.error(error);
         throw new Error(error);
