@@ -19,7 +19,6 @@ const login = async (_: any, userInput: ILoginInput, context: ResolverContextTyp
         const { user: exUser, req } = context;
         if (!exUser) {
             const loginedUser = await userService.loginWithLocal(userInput);
-
             req.login(loginedUser, (loginError: any) => {
                 if (loginError) {
                     throw new Error(loginError);

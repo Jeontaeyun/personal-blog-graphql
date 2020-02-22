@@ -14,7 +14,8 @@ const createPost = async (_: any, postInput: IPostInput, context: ResolverContex
         const newPost = await postService.createPost(postInput, userId);
         return newPost;
     } catch (error) {
-        throw new Error("데이터 베이스 오류");
+        console.error(error);
+        throw new Error(error);
     }
 };
 
@@ -24,7 +25,8 @@ const updatePost = async (_: any, postInput: IPostInput & { id: string }, contex
         const isUpdated = await postService.updatePost(postInput);
         return isUpdated;
     } catch (error) {
-        throw new Error("데이터 베이스 오류");
+        console.error(error);
+        throw new Error(error);
     }
 };
 
@@ -35,7 +37,8 @@ const deletePost = async (_: any, data: { id: string }, context: ResolverContext
         const isDeleted = await postService.deletePost(id);
         return isDeleted;
     } catch (error) {
-        throw new Error("데이터 베이스 오류");
+        console.error(error);
+        throw new Error(error);
     }
 };
 

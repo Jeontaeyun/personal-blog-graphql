@@ -1,33 +1,32 @@
 import { ResolverContextType } from "types/services/User";
 import Container from "typedi";
-import { ServiceUtils } from "services";
+import { ServiceUtils, ReactionService } from "services";
 
 const utilService = Container.get(ServiceUtils);
+const reactionService = Container.get(ReactionService);
 
-const createLiked = async (_: any, { post_id }: { post_id: string }, context: ResolverContextType, info: any) => {
+const createLiked = async (_: any, data: { postId: string }, context: ResolverContextType, info: any) => {
     try {
         utilService.checkLogined(context.user);
-        const post = await db.Post.findOne({
-            where: { id: post_id }
-        });
-        if (!post) return new Error("포스트가 존재하지 않습니다.");
-        await post.addLiker(user.id);
-        return user.id;
-    } catch (e) {
-        return new Error("데이터 베이스 오류");
+        const { user } = context;
+        const { postId } = data;
+        const isCreated = reactionService.createLike(postId, user.id);
+        return isCreated;
+    } catch (error) {
+        console.error(error);
+        throw new Error(error);
     }
 };
-const deleteLiked = async (_: any, { post_id }: { post_id: string }, { db, user }: ResolverContextType, info: any) => {
+const deleteLiked = async (_: any, data: { postId: string }, context: ResolverContextType, info: any) => {
     try {
         utilService.checkLogined(context.user);
-        const post = await db.Post.findOne({
-            where: { id: post_id }
-        });
-        if (!post) return new Error("포스트가 존재하지 않습니다.");
-        await post.removeLiker(user.id);
-        return user.id;
-    } catch (e) {
-        return new Error("데이터 베이스 오류");
+        const { user } = context;
+        const { postId } = data;
+        const isDeleted = reactionService.deleteLike(postId, user.id);
+        return isDeleted;
+    } catch (error) {
+        console.error(error);
+        throw new Error(error);
     }
 };
 

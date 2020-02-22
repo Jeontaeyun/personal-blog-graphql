@@ -50,10 +50,10 @@ type Mutation {
     deletePost(id: ID!): Boolean!
 
     createComment(postId: ID!, description: String!): Comment!
-    updateComment(postId: ID!, description: String!): Boolean!
-    deleteComment(postId: ID!): Boolean!
+    updateComment(commentId: ID!, description: String!): Boolean!
+    deleteComment(commentId: ID!): Boolean!
 
-    createRecomment(postId: ID!, id: ID!, description: String!): Comment!
+    createRecomment(postId: ID!, commentId: ID!, description: String!): Comment!
 
     createLiked(postId: ID!): Int!
     deleteLiked(postId: ID!): Int!
