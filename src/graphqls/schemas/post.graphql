@@ -1,0 +1,12 @@
+# import Category from "category.graphql"
+
+type Post {
+    id: ID!
+    title: String!
+    description: String!
+    createdAt: String!
+    user: User!
+    tags: [Tag]!
+    category: Category!
+    liker: [User!]!
+}

@@ -10,6 +10,7 @@
                     "api": "./src/api",
                     "services": "./src/services",
                     "config": "./src/config",
+                    "graphqls": "./src/graphqls",
                     "models": "./src/models"
                 }
             }

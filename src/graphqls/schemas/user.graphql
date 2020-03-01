@@ -1,3 +1,6 @@
+# import Post from "post.graphql"
+# import Comment from "comment.graphql"
+
 enum USER_GRANT_ENUM {
     ADMIN
     GUEST

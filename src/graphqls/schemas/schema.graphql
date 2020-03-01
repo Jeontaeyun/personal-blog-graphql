@@ -1,33 +1,8 @@
 # import User from "user.graphql"
-
-type Comment {
-    id: ID!
-    description: String!
-    createdAt: String
-    user: User
-    postId: Int
-}
-
-type Post {
-    id: ID!
-    title: String!
-    description: String!
-    createdAt: String!
-    user: User!
-    tags: [Tag]!
-    category: Category!
-    liker: [User!]!
-}
-
-type Category {
-    id: ID!
-    name: String!
-}
-
-type Tag {
-    id: ID!
-    name: String!
-}
+# import Post from "post.graphql"
+# import Comment from "comment.graphql"
+# import Category from "category.graphql"
+# import Tag from "tag.graphql"
 
 type Query {
     posts(first: Int, afterCursor: Int, ord: String, category_id: Int): [Post!]!

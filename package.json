@@ -10,15 +10,15 @@
     ],
     "main": "src/app.ts",
     "scripts": {
-        "start": "nodemon",
-        "build": "babel src --out-dir dist --copy-files --extensions .ts,.js",
+        "start": "cross-env NODE_ENV=development nodemon",
+        "build": "cross-env NODE_ENV=production babel src --out-dir dist --copy-files --extensions .ts,.js",
         "fix:tslint": "tslint --project tsconfig.json --fix ",
         "fix:prettier": "prettier --write \"src/**/*.{ts,js]\"",
         "fix": "yarn fix:prettier &s yarn fix:tslint",
         "codegen:init": "graphql-codegen init",
         "codegen:generate": "graphql-codegen --config codegen.yml",
         "migrate:generate": "sequelize-cli migration:generate --name",
-        "test": "jest"
+        "test": "cross-env NODE_ENV=test jest"
     },
     "author": {
         "name": "Stark Jeon",
@@ -36,6 +36,7 @@
         "bcrypt-nodejs": "0.0.3",
         "cookie-parser": "^1.4.4",
         "cors": "^2.8.5",
+        "cross-env": "^7.0.0",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "express-session": "^1.16.2",

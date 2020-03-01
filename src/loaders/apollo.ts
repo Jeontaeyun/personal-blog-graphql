@@ -1,6 +1,6 @@
 import Express from "express";
 import { ApolloServer } from "apollo-server-express";
-import getGraphQlConfig from "../graphql";
+import getGraphQlConfig from "../graphqls";
 import { IDatabase } from "models";
 
 export default async (database: IDatabase, app: Express.Application): Promise<ApolloServer> => {

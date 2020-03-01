@@ -11,36 +11,31 @@ const testUser = {
     userId: "tes53",
     password: process.env.TEST_PASSWORD,
     grant: 5,
-    nickname: "testUser01",
+    nickname: "testUser01"
 };
 
 const testCategory = {
     id: 0,
-    name: "카테고리41",
+    name: "카테고리41"
 };
 
 const testPost = {
     id: 0,
     title: "테스트 타이틀",
     description: "테스트 본문",
-    tag: "#테스트태그01 #테스트태그02 #테스트태그03",
+    tag: "#테스트태그01 #테스트태그02 #테스트태그03"
 };
 
 const testComment = {
     id: 0,
-    description: "테스트 댓글",
+    description: "테스트 댓글"
 };
 
 describe("Integration Test", () => {
     it("create user", async () => {
         const CREATE_USER = gql`
             mutation($userId: String!, $password: String!, $grant: Int!, $nickname: String!) {
-                createUser(
-                    userId: $userId
-                    password: $password
-                    grant: $grant
-                    nickname: $nickname
-                ) {
+                createUser(userId: $userId, password: $password, grant: $grant, nickname: $nickname) {
                     id
                     userId
                     nickname
@@ -49,10 +44,10 @@ describe("Integration Test", () => {
             }
         `;
         const {
-            data: { createUser },
+            data: { createUser }
         } = await mutate({
             mutation: CREATE_USER,
-            variables: testUser,
+            variables: testUser
         });
         const { userId, grant, nickname } = testUser;
         testUser["id"] = createUser.id;
@@ -61,12 +56,7 @@ describe("Integration Test", () => {
     it("create user Error with exuser", async () => {
         const CREATE_USER = gql`
             mutation($userId: String!, $password: String!, $grant: Int!, $nickname: String!) {
-                createUser(
-                    userId: $userId
-                    password: $password
-                    grant: $grant
-                    nickname: $nickname
-                ) {
+                createUser(userId: $userId, password: $password, grant: $grant, nickname: $nickname) {
                     id
                     userId
                     nickname
@@ -76,7 +66,7 @@ describe("Integration Test", () => {
         `;
         const { errors } = await mutate({
             mutation: CREATE_USER,
-            variables: testUser,
+            variables: testUser
         });
         expect(errors[0].message).toEqual("Username is taken");
     });
@@ -114,10 +104,10 @@ describe("Integration Test", () => {
         `;
         const { userId, grant, nickname, password, id } = testUser;
         const {
-            data: { login },
+            data: { login }
         } = await mutate({
             mutation: LOGIN,
-            variables: { userId, password },
+            variables: { userId, password }
         });
         expect(login).toEqual({ id, userId, grant, nickname });
     });
@@ -132,12 +122,12 @@ describe("Integration Test", () => {
             }
         `;
         const {
-            data: { createCategory },
+            data: { createCategory }
         } = await mutate({
             mutation: CREATE_CATEGORY,
             variables: {
-                category_name: name,
-            },
+                category_name: name
+            }
         });
         testCategory["id"] = createCategory.id;
         expect(createCategory).toEqual({ id: createCategory.id, name });
@@ -155,8 +145,8 @@ describe("Integration Test", () => {
         const { errors } = await mutate({
             mutation: CREATE_CATEGORY,
             variables: {
-                category_name: name,
-            },
+                category_name: name
+            }
         });
         expect(errors[0].message).toBe("중복된 카테고리입니다.");
     });
@@ -166,12 +156,7 @@ describe("Integration Test", () => {
         const { id: category_id, name } = testCategory;
         const CREATE_POST = gql`
             mutation($title: String!, $description: String!, $tag: String!, $category_id: ID!) {
-                createPost(
-                    title: $title
-                    description: $description
-                    tag: $tag
-                    category_id: $category_id
-                ) {
+                createPost(title: $title, description: $description, tag: $tag, category_id: $category_id) {
                     id
                     title
                     description
@@ -190,15 +175,15 @@ describe("Integration Test", () => {
             }
         `;
         const {
-            data: { createPost },
+            data: { createPost }
         } = await mutate({
             mutation: CREATE_POST,
             variables: {
                 title,
                 description,
                 tag,
-                category_id,
-            },
+                category_id
+            }
         });
         testPost["id"] = createPost.id;
         expect(createPost).toEqual({
@@ -207,23 +192,23 @@ describe("Integration Test", () => {
             description,
             Category: {
                 name,
-                id: category_id,
+                id: category_id
             },
             Tags: [
                 {
-                    name: "테스트태그01",
+                    name: "테스트태그01"
                 },
                 {
-                    name: "테스트태그02",
+                    name: "테스트태그02"
                 },
                 {
-                    name: "테스트태그03",
-                },
+                    name: "테스트태그03"
+                }
             ],
             User: {
                 id: user_id,
-                nickname,
-            },
+                nickname
+            }
         });
     });
     it("read post", async () => {
@@ -251,12 +236,12 @@ describe("Integration Test", () => {
             }
         `;
         const {
-            data: { post },
+            data: { post }
         } = await query({
             mutation: POST,
             variables: {
-                post_id,
-            },
+                post_id
+            }
         });
         expect(post).toEqual({
             id: post_id,
@@ -264,23 +249,23 @@ describe("Integration Test", () => {
             description,
             Category: {
                 name,
-                id: category_id,
+                id: category_id
             },
             Tags: [
                 {
-                    name: "테스트태그01",
+                    name: "테스트태그01"
                 },
                 {
-                    name: "테스트태그02",
+                    name: "테스트태그02"
                 },
                 {
-                    name: "테스트태그03",
-                },
+                    name: "테스트태그03"
+                }
             ],
             User: {
                 id: user_id,
-                nickname,
-            },
+                nickname
+            }
         });
     });
     it("read post Error with no post", async () => {
@@ -307,8 +292,8 @@ describe("Integration Test", () => {
         const { errors } = await query({
             mutation: POST,
             variables: {
-                post_id: "wrong_id",
-            },
+                post_id: "wrong_id"
+            }
         });
         expect(errors[0].message).toBe("포스트가 존재하지 않습니다.");
     });
@@ -320,15 +305,15 @@ describe("Integration Test", () => {
             }
         `;
         const {
-            data: { updatePost },
+            data: { updatePost }
         } = await mutate({
             mutation: UPDATE_POST,
             variables: {
                 post_id,
                 title: "수정된 타이틀",
                 description: "수정된 본문",
-                tag: "#수정된태그01 #수정된태그02 #수정된태그03",
-            },
+                tag: "#수정된태그01 #수정된태그02 #수정된태그03"
+            }
         });
 
         expect(updatePost).toEqual([1]);
@@ -345,8 +330,8 @@ describe("Integration Test", () => {
                 post_id: "wrong_id",
                 title: "수정된 타이틀",
                 description: "수정된 본문",
-                tag: "#수정된태그01 #수정된태그02 #수정된태그03",
-            },
+                tag: "#수정된태그01 #수정된태그02 #수정된태그03"
+            }
         });
 
         expect(errors[0].message).toBe("포스트가 존재하지 않습니다.");
@@ -360,12 +345,12 @@ describe("Integration Test", () => {
             }
         `;
         const {
-            data: { createLiked },
+            data: { createLiked }
         } = await mutate({
             mutation: CREATE_LIKED,
             variables: {
-                post_id,
-            },
+                post_id
+            }
         });
         expect(createLiked).toBe(Number(user_id));
     });
@@ -378,8 +363,8 @@ describe("Integration Test", () => {
         const { errors } = await mutate({
             mutation: CREATE_LIKED,
             variables: {
-                post_id: "wrong_id",
-            },
+                post_id: "wrong_id"
+            }
         });
 
         expect(errors[0].message).toBe("포스트가 존재하지 않습니다.");
@@ -393,12 +378,12 @@ describe("Integration Test", () => {
             }
         `;
         const {
-            data: { deleteLiked },
+            data: { deleteLiked }
         } = await mutate({
             mutation: DELETE_LIKED,
             variables: {
-                post_id,
-            },
+                post_id
+            }
         });
 
         expect(deleteLiked).toBe(Number(user_id));
@@ -412,8 +397,8 @@ describe("Integration Test", () => {
         const { errors } = await mutate({
             mutation: DELETE_LIKED,
             variables: {
-                post_id: "wrong_id",
-            },
+                post_id: "wrong_id"
+            }
         });
 
         expect(errors[0].message).toBe("포스트가 존재하지 않습니다.");
@@ -436,13 +421,13 @@ describe("Integration Test", () => {
             }
         `;
         const {
-            data: { createComment },
+            data: { createComment }
         } = await mutate({
             mutation: CREATE_COMMENT,
             variables: {
                 post_id,
-                description,
-            },
+                description
+            }
         });
         testComment["id"] = createComment.id;
         expect(createComment).toEqual({
@@ -450,9 +435,9 @@ describe("Integration Test", () => {
             description,
             User: {
                 id: user_id,
-                nickname,
+                nickname
             },
-            PostId: Number(post_id),
+            PostId: Number(post_id)
         });
     });
     it("create comment Error with no post", async () => {
@@ -474,8 +459,8 @@ describe("Integration Test", () => {
             mutation: CREATE_COMMENT,
             variables: {
                 post_id: "wrong_id",
-                description,
-            },
+                description
+            }
         });
         expect(errors[0].message).toBe("포스트가 존재하지 않습니다.");
     });
@@ -487,13 +472,13 @@ describe("Integration Test", () => {
             }
         `;
         const {
-            data: { updateComment },
+            data: { updateComment }
         } = await mutate({
             mutation: UPDATE_COMMENT,
             variables: {
                 comment_id,
-                description: "수정된 댓글",
-            },
+                description: "수정된 댓글"
+            }
         });
         expect(updateComment).toEqual([1]);
     });
@@ -507,8 +492,8 @@ describe("Integration Test", () => {
             mutation: UPDATE_COMMENT,
             variables: {
                 comment_id: "wrong_id",
-                description: "수정된 댓글",
-            },
+                description: "수정된 댓글"
+            }
         });
 
         expect(errors[0].message).toBe("댓글이 존재하지 않습니다.");
@@ -521,12 +506,12 @@ describe("Integration Test", () => {
             }
         `;
         const {
-            data: { deleteComment },
+            data: { deleteComment }
         } = await mutate({
             mutation: DELETE_COMMENT,
             variables: {
-                comment_id,
-            },
+                comment_id
+            }
         });
 
         expect(deleteComment).toBe(1);
@@ -540,8 +525,8 @@ describe("Integration Test", () => {
         const { errors } = await mutate({
             mutation: DELETE_COMMENT,
             variables: {
-                comment_id: "wrong_id",
-            },
+                comment_id: "wrong_id"
+            }
         });
         expect(errors[0].message).toBe("댓글이 존재하지 않습니다.");
     });
@@ -553,12 +538,12 @@ describe("Integration Test", () => {
             }
         `;
         const {
-            data: { deletePost },
+            data: { deletePost }
         } = await mutate({
             mutation: DELETE_POST,
             variables: {
-                post_id: post_id,
-            },
+                post_id: post_id
+            }
         });
 
         expect(deletePost).toBe(1);
@@ -572,8 +557,8 @@ describe("Integration Test", () => {
         const { errors } = await mutate({
             mutation: DELETE_POST,
             variables: {
-                post_id: "wrong_id",
-            },
+                post_id: "wrong_id"
+            }
         });
 
         expect(errors[0].message).toBe("포스트가 존재하지 않습니다.");
@@ -591,9 +576,9 @@ describe("Integration Test", () => {
         `;
         const { userId, grant, nickname, id } = testUser;
         const {
-            data: { logout },
+            data: { logout }
         } = await mutate({
-            mutation: LOGOUT,
+            mutation: LOGOUT
         });
         expect(logout).toEqual({ id, userId, grant, nickname });
     });

@@ -1,0 +1,9 @@
+# import User from "user.graphql"
+
+type Comment {
+    id: ID!
+    description: String!
+    createdAt: String
+    user: User
+    postId: Int
+}

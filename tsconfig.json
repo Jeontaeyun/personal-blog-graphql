@@ -19,7 +19,8 @@
             "types/*": ["./types/*"],
             "api/*": ["./api/*"],
             "services/*": ["./services/*"],
-            "config/*": ["./config/*"]
+            "config/*": ["./config/*"],
+            "graphqls/*": ["./graphqls/*"]
         }
     },
     "compileOnSave": true,
