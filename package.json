@@ -44,6 +44,7 @@
         "graphql-import": "^1.0.0-beta.1",
         "http": "0.0.0",
         "https": "^1.0.0",
+        "jest": "^25.1.0",
         "jsonwebtoken": "^8.5.1",
         "morgan": "^1.9.1",
         "mysql2": "^1.7.0",
@@ -86,6 +87,7 @@
         "babel-plugin-module-resolver": "^4.0.0",
         "graphql-tools": "^4.0.6",
         "nodemon": "^1.19.2",
+        "ts-jest": "^25.2.1",
         "tslint": "^5.20.1",
         "tslint-config-prettier": "^1.18.0",
         "typescript": "^3.7.4"

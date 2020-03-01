@@ -1,6 +1,7 @@
-const { ApolloServer } = require("apollo-server");
-const graphqlConfig = require("../graphqls");
-const db = require("../models");
+import { ApolloServer } from "apollo-server";
+import graphqlConfig from "../graphqls";
+import db from "../models";
+
 const baseContext = {
     req: {
         user: null,
@@ -18,7 +19,7 @@ const baseContext = {
     user: null
 };
 
-module.exports = {
+export default {
     testServer: new ApolloServer({
         ...graphqlConfig,
         context: baseContext
