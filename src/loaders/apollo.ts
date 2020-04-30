@@ -1,7 +1,7 @@
 import Express from "express";
 import { ApolloServer } from "apollo-server-express";
 import getGraphQlConfig from "../graphqls";
-import { IDatabase } from "models";
+import { IDatabase } from "models/mysql";
 
 export default async (database: IDatabase, app: Express.Application): Promise<ApolloServer> => {
     try {
@@ -10,6 +10,7 @@ export default async (database: IDatabase, app: Express.Application): Promise<Ap
         const apollo = new ApolloServer({
             ...graphqlConfig,
             playground: {
+                endpoint: "/graphql",
                 settings: {
                     "request.credentials": "include"
                 }
@@ -17,17 +18,11 @@ export default async (database: IDatabase, app: Express.Application): Promise<Ap
             /**
              *  Context object is one that gets passed to every single resolvers at every level
              **/
-            context: ({ req }: { req: Express.Request & { user: any } }) => {
-                let user = null;
-                if (req.user) {
-                    user = req.user.toJSON();
-                }
-                if (!user) {
-                    console.log("유저가 존재하지 않습니다.");
-                    return { database, req };
-                }
-                return { database, user, req };
-            }
+            context: ({ req, res }: { req: Express.Request & { user: any }; res: Express.Response }) => ({
+                req,
+                res,
+                getUser: () => req.user
+            })
         });
         apollo.applyMiddleware({ app, path: "/graphql" });
         return apollo;

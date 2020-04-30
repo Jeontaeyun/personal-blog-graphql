@@ -1,4 +1,4 @@
-const { testServer } = require("./mockTestServer");
+const { testServer } = require("./mockupTest");
 const { gql } = require("apollo-server-express");
 const { createTestClient } = require("apollo-server-testing");
 const dotenv = require("dotenv");

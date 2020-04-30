@@ -4,6 +4,13 @@
 # import Category from "category.graphql"
 # import Tag from "tag.graphql"
 
+enum PLATFORM {
+    GOOGLE
+    GITHUB
+    KAKAO
+    LOCAL
+}
+
 type Query {
     posts(first: Int, afterCursor: Int, ord: String, category_id: Int): [Post!]!
     post(id: ID!): Post
@@ -34,5 +41,5 @@ type Mutation {
     deleteLiked(postId: ID!): Int!
 
     logout: User!
-    login(userId: String!, password: String!): User!
+    login(userId: String!, password: String!, platform: PLATFORM): User!
 }

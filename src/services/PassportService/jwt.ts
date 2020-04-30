@@ -13,6 +13,7 @@ const jwtSign = (email: any) => {
         token
     };
 };
+
 const jwtVerify = (req: any, token: any) => {
     try {
         req.decoded = jwt.verify(token, process.env.JWT_SECRET);

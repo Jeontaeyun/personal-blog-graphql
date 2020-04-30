@@ -1,12 +1,13 @@
 import { ResolverContextType, IUser, ILocalSignUpInput, ILoginInput } from "types/services/User";
 import Container from "typedi";
-import UserService from "services/UserService";
+import { PassportService, UserService } from "services";
 
 const userService = Container.get(UserService);
+const passportService = Container.get(PassportService);
 
 const signUpWithLocal = async (_: any, userInput: ILocalSignUpInput, context: ResolverContextType, info: any) => {
     try {
-        const createdUser = await userService.signUpWithLocal(userInput);
+        const createdUser = await passportService.signUpLocal(userInput);
         return createdUser;
     } catch (error) {
         console.error(error);
@@ -18,7 +19,7 @@ const login = async (_: any, userInput: ILoginInput, context: ResolverContextTyp
     try {
         const { user: exUser, req } = context;
         if (!exUser) {
-            const loginedUser = await userService.loginWithLocal(userInput);
+            const loginedUser = await passportService.authenticateLocal(userInput);
             req.login(loginedUser, (loginError: any) => {
                 if (loginError) {
                     throw new Error(loginError);

@@ -4,8 +4,8 @@ import { UserInputError } from "apollo-server";
 import bcrypt from "bcrypt-nodejs";
 
 import { ILocalSignUpInput, USER_GRANT_ENUM, IUser, ILoginInput } from "types/services/User";
-import database from "models";
-import { CategoryStatic, ICategoryModel } from "models/category";
+import database from "models/mysql";
+import { CategoryStatic, ICategoryModel } from "models/mysql/category";
 
 interface ICategoryService {
     getCategorys: () => Promise<ICategoryModel[]>;

@@ -4,22 +4,21 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import expressSession, { SessionOptions } from "express-session";
 import passport from "passport";
-import passportConfig from "../services/PassportService";
-
-const SESSION_NAME = "wjsxodbsqmffhrms";
+import { passportConfig } from "../services/PassportService";
+import { ENV } from "config";
 
 const sessionOption: SessionOptions = {
     resave: false,
     saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET as string,
+    secret: ENV.COOKIE_SECRET,
     cookie: {
         httpOnly: true,
         secure: false
     },
-    name: SESSION_NAME
+    name: ENV.SESSION_NAME
 };
 
-if (process.env.NODE_ENV === "production") {
+if (ENV.NODE_ENV === "production") {
     sessionOption.proxy = true;
     if (sessionOption.cookie) {
         sessionOption.cookie.secure = true;
@@ -30,7 +29,7 @@ export default async ({ app }: { app: Express.Application }) => {
     passportConfig();
     // Express dev logging middleware
     app.use(morgan("dev"));
-    // Middleware for parsing json body
+
     app.use(Express.json());
     // Middleware for form
     app.use(Express.urlencoded({ extended: true }));
@@ -39,7 +38,7 @@ export default async ({ app }: { app: Express.Application }) => {
      */
     app.use(
         cors({
-            origin: true,
+            origin: "*",
             credentials: true
         })
     );

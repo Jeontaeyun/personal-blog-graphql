@@ -6,6 +6,8 @@ import { PostStatic, IPostModel } from "./post";
 export interface ITagModel extends Model {
     readonly id: string;
     readonly name: string;
+    readonly createdAt: Date;
+    readonly updatedAt: Date;
     removePost: (post: IPostModel) => Promise<any>;
     addPost: (post: IPostModel) => Promise<any>;
 }

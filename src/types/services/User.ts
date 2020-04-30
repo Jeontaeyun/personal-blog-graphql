@@ -1,9 +1,16 @@
-import { IDatabase } from "models";
+import { IDatabase } from "models/mysql";
 
+export enum PLATFORM {
+    GOOGLE = "GOOGLE",
+    GITHUB = "GITHUB",
+    KAKAO = "KAKAO",
+    LOCAL = "LOCAL"
+}
 export interface IUser {
     id: string;
-    nickname: string;
+    nickname?: string;
     userId: string;
+    platform: PLATFORM;
     password: string;
     grant: USER_GRANT_ENUM;
     createdAt?: number;
@@ -28,6 +35,7 @@ export interface ILocalSignUpInput {
 export interface ILoginInput {
     userId: string;
     password: string;
+    platform: PLATFORM;
 }
 
 export enum USER_GRANT_ENUM {

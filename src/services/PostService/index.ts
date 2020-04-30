@@ -1,11 +1,11 @@
-import { PostStatic, IPostModel } from "models/post";
+import { PostStatic, IPostModel } from "models/mysql/post";
 import { IPostInput, IPostService } from "types/services/Post";
 import Container, { Service, Inject } from "typedi";
-import database from "models";
+import database from "models/mysql";
 import ServiceUtils from "services/ServiceUtils";
-import { UserStatic } from "models/user";
-import { TagStatic, ITagModel } from "models/tag";
-import { CategoryStatic } from "models/category";
+import { UserStatic } from "models/mysql/user";
+import { TagStatic, ITagModel } from "models/mysql/tag";
+import { CategoryStatic } from "models/mysql/category";
 
 @Service()
 class PostService implements IPostService {

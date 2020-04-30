@@ -10,9 +10,9 @@ export default {
         dialect: "mysql"
     },
     test: {
-        username: process.env.DB_NAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
+        username: process.env.TEST_DB_NAME,
+        password: process.env.TEST_DB_PASSWORD,
+        database: process.env.TEST_DB_DATABASE,
         host: "localhost",
         dialect: "mysql"
     },

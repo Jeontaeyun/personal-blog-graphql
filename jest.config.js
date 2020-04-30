@@ -1,6 +1,6 @@
 module.exports = {
     testEnvironment: "node",
-    roots: ["<rootDir>/"],
+    roots: ["<rootDir>/src"],
     preset: "ts-jest",
     globals: {
         "ts-jest": {
@@ -14,7 +14,8 @@ module.exports = {
     },
     notify: true,
     notifyMode: "always",
-    testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.ts?$",
+    testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.tsx?$",
     moduleFileExtensions: ["ts", , "js", "jsx", "json"],
-    testPathIgnorePatterns: ["<rootDir>/dist/", "<rootDir>/node_modules/"]
+    testPathIgnorePatterns: ["<rootDir>/dist/", "<rootDir>/node_modules/"],
+    setupFilesAfterEnv: ["./src/test/config/setupTest.ts"]
 };

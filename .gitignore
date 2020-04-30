@@ -1,5 +1,11 @@
+#dotenv
 .env
+
+#Node
 node_modules
 .gitignore
 ssl
+
+#etc
 dist
+coverage

@@ -1,6 +1,6 @@
 import { ApolloServer } from "apollo-server";
-import graphqlConfig from "../graphqls";
-import db from "../models";
+import graphqlConfig from "../../graphqls";
+import db from "../../models/mysql";
 
 const baseContext = {
     req: {
@@ -18,6 +18,8 @@ const baseContext = {
     db,
     user: null
 };
+
+beforeAll(() => {});
 
 export default {
     testServer: new ApolloServer({

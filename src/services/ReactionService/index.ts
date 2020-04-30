@@ -1,10 +1,9 @@
 import { ICommentInput } from "types/services/Comment";
 import Container, { Service, Inject } from "typedi";
-import { PostStatic } from "models/post";
-import { UserStatic } from "models/user";
-import { CommentStatic, ICommentModel } from "models/comment";
-import database from "models";
-import { raw } from "express";
+import { PostStatic } from "models/mysql/post";
+import { UserStatic } from "models/mysql/user";
+import { CommentStatic, ICommentModel } from "models/mysql/comment";
+import database from "models/mysql";
 
 interface IReactionService {
     getComments: (postId: string) => Promise<ICommentModel[]>;

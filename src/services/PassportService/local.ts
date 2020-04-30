@@ -1,15 +1,13 @@
 import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
 //@ts-ignore
 import bcrypt from "bcrypt-nodejs";
-//@ts-ignore
-import { Strategy as LocalStartegy } from "passport-local";
-import database from "../../models";
+import database from "../../models/mysql";
 import { IUser } from "types/services/User";
-import { IUserModel } from "models/user";
 
 export default () => {
     passport.use(
-        new LocalStartegy(
+        new LocalStrategy(
             {
                 usernameField: "userId",
                 passwordField: "password"
@@ -27,9 +25,9 @@ export default () => {
                             throw new Error(error);
                         }
                         if (result) {
-                            const obtainedUser = Object.assign({}, user.toJSON()) as IUser;
-                            delete obtainedUser.password;
-                            return done(null, obtainedUser);
+                            const filteredUser = Object.assign({}, user.toJSON()) as IUser;
+                            delete filteredUser.password;
+                            return done(null, filteredUser);
                         } else {
                             return done(null, false, { reason: "틀린 비밀번호 입니다." });
                         }
