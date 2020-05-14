@@ -33,15 +33,13 @@ export default async ({ app }: { app: Express.Application }) => {
     app.use(Express.json());
     // Middleware for form
     app.use(Express.urlencoded({ extended: true }));
-    /**
-     * CORS SOP(Same-origin-policy) Policy configuration
-     */
-    app.use(
+
+    app.use((req, res, next) => {
         cors({
-            origin: "*",
+            origin: req.get("origin"),
             credentials: true
-        })
-    );
+        })(req, res, next);
+    });
     app.use("/", Express.static("public"));
     /**
      * SecretKey for session and cookie
@@ -54,5 +52,6 @@ export default async ({ app }: { app: Express.Application }) => {
      */
     app.use(passport.initialize());
     app.use(passport.session());
+
     return app;
 };

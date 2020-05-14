@@ -41,5 +41,6 @@ type Mutation {
     deleteLiked(postId: ID!): Int!
 
     logout: User!
-    login(userId: String!, password: String!, platform: PLATFORM): User!
+    authenticateLocal(userId: String!, password: String!, platform: PLATFORM): AuthResponse
+    authenticateOauth(accessToken: String!, platform: String): AuthResponse
 }

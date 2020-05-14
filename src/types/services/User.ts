@@ -1,5 +1,4 @@
-import { IDatabase } from "models/mysql";
-
+import Express from "express";
 export enum PLATFORM {
     GOOGLE = "GOOGLE",
     GITHUB = "GITHUB",
@@ -43,4 +42,4 @@ export enum USER_GRANT_ENUM {
     GUEST = "GUEST"
 }
 
-export type ResolverContextType = { req: any; database: IDatabase; user: IUser };
+export type ResolverContextType = { req: Express.Request; res: Express.Response; user: any };

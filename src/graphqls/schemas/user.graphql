@@ -15,3 +15,8 @@ type User {
     token: String!
     grant: Int!
 }
+
+type AuthResponse {
+    token: String!
+    userId: String!
+}

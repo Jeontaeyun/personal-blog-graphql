@@ -1,12 +1,17 @@
 import { UserInputError } from "apollo-server";
+import Container, { Inject } from "typedi";
+import Express from "express";
 //@ts-ignore
 import bcrypt from "bcrypt-nodejs";
 import passport from "passport";
 
-import local from "./local";
+import localStrategy from "./local";
+import googleStrategy from "./google";
+import githubStrategy from "./github";
+import kakaoStrategy from "./kakao";
+
 import database from "../../models/mysql";
 import { IUser, USER_GRANT_ENUM, ILoginInput, ILocalSignUpInput, PLATFORM } from "types/services/User";
-import Container, { Inject } from "typedi";
 import { UserStatic } from "models/mysql/user";
 
 export const passportConfig = () => {
@@ -26,7 +31,10 @@ export const passportConfig = () => {
             return done(error);
         }
     });
-    local();
+    localStrategy();
+    googleStrategy();
+    kakaoStrategy();
+    //kakaoStrategy
 };
 
 class PassportService {
@@ -67,56 +75,35 @@ class PassportService {
         return await hashedUser;
     };
 
-    private authenticateGoogle = async () => {
-        try {
-            return new Promise((resolve, reject) => {
-                passport.authenticate(
-                    "google",
-                    {
-                        scope: ["profile"]
-                    },
-                    function(req, res) {
-                        return resolve(true);
-                    }
-                );
-            });
-        } catch (error) {
-            console.error(error);
-            throw new Error(error);
-        }
-    };
+    private authenticateGoogle = (req: Express.Request, res: Express.Response) =>
+        new Promise((resolve, reject) => {
+            passport.authenticate("google", { session: false, scope: ["profile"] }, function(error, data, info) {
+                if (error) {
+                    reject(error);
+                }
+                resolve({ data, info });
+            })(req, res);
+        });
 
-    private authenticateGitHub = async () => {
-        try {
-            return new Promise((resolve, reject) => {
-                passport.authenticate("github", {}, function(req, res) {
-                    return resolve(true);
-                });
+    private authenticateGitHub = (req: Express.Request, res: Express.Response) =>
+        new Promise((resolve, reject) => {
+            passport.authenticate("github", { session: false }, function(error, data, info) {
+                if (error) {
+                    reject(error);
+                }
+                resolve({ data, info });
             });
-        } catch (error) {
-            console.error(error);
-            throw new Error(error);
-        }
-    };
+        });
 
-    private authenticateKakao = async () => {
-        try {
-            return new Promise((resolve, reject) => {
-                passport.authenticate(
-                    "kakao",
-                    {
-                        scope: ["profile"]
-                    },
-                    function(req, res) {
-                        return resolve(true);
-                    }
-                );
-            });
-        } catch (error) {
-            console.error(error);
-            throw new Error(error);
-        }
-    };
+    private authenticateKakao = (req: Express.Request, res: Express.Response) =>
+        new Promise((resolve, reject) => {
+            passport.authenticate("kakao", { session: false }, function(error, data, info) {
+                if (error) {
+                    reject(error);
+                }
+                resolve({ data, info });
+            })(req, res);
+        });
 
     public authenticateLocal = async (loginInput: ILoginInput) => {
         try {
@@ -139,14 +126,19 @@ class PassportService {
         }
     };
 
-    public authenticateOauth = async (platform: PLATFORM) => {
-        switch (platform) {
-            case PLATFORM.GOOGLE:
-                return this.authenticateGoogle();
-            case PLATFORM.GITHUB:
-                return this.authenticateGitHub();
-            case PLATFORM.KAKAO:
-                return this.authenticateKakao();
+    public authenticateOauth = async (req: Express.Request, res: Express.Response, platform: PLATFORM) => {
+        try {
+            switch (platform) {
+                case PLATFORM.GOOGLE:
+                    return await this.authenticateGoogle(req, res);
+                case PLATFORM.GITHUB:
+                    return await this.authenticateGitHub(req, res);
+                case PLATFORM.KAKAO:
+                    return await this.authenticateKakao(req, res);
+            }
+        } catch (error) {
+            console.error(error);
+            throw error;
         }
     };
 }
