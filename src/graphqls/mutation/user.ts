@@ -47,8 +47,7 @@ const authenticateOauth = async (
         const { res, req } = context;
         const { platform } = args;
 
-        console.log(args);
-        const { data, info } = await passportService.authenticateOauth(req, res, platform);
+        await passportService.authenticateOauth(req, res, platform);
 
         return { token: "", name: "" };
     } catch (error) {
